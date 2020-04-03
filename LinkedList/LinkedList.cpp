@@ -1,12 +1,10 @@
 #include "LinkedList.h"
 
 #include <cassert>
+#include <stdexcept>
 
-LinkedList::Node::Node(const ValueType& value, Node* next)
-{
-	this->value = value;
-	this->next = next;
-}
+LinkedList::Node::Node(const ValueType& value, Node* next) :
+        value(value), next(next) {};
 
 LinkedList::Node::~Node()
 {
@@ -28,27 +26,24 @@ void LinkedList::Node::removeNext()
 }
 
 LinkedList::LinkedList()
-	: _head(nullptr), _size(0)
-{
-	
-}
+	: _head(nullptr), _size(0) {}
 
 LinkedList::LinkedList(const LinkedList& copyList)
 {
-	this->_size = copyList._size;
-	if (this->_size == 0) {
-		this->_head = nullptr;
+	_size = copyList._size;
+	if (_size == 0) {
+		_head = nullptr;
 		return;
 	}
 
-	this->_head = new Node(copyList._head->value);
+	_head = new Node(copyList._head->value);
 
-	Node* currentNode = this->_head;
+	Node* currentNode = _head;
 	Node* currentCopyNode = copyList._head;
 
 	while (currentCopyNode->next) {
+        currentCopyNode = currentCopyNode->next;
 		currentNode->next = new Node(currentCopyNode->value);
-		currentCopyNode = currentCopyNode->next;
 		currentNode = currentNode->next;
 	}
 }
@@ -65,6 +60,7 @@ LinkedList& LinkedList::operator=(const LinkedList& copyList)
 	return *this;
 }
 
+//Конструктор перемещения
 LinkedList::LinkedList(LinkedList&& moveList) noexcept
 {
 	this->_size = moveList._size;
@@ -74,6 +70,7 @@ LinkedList::LinkedList(LinkedList&& moveList) noexcept
 	moveList._head = nullptr;
 }
 
+//Перемещающий оператор присванивания
 LinkedList& LinkedList::operator=(LinkedList&& moveList) noexcept
 {
 	if (this == &moveList) {
@@ -158,36 +155,121 @@ void LinkedList::pushFront(const ValueType& value)
 	++_size;
 }
 
+void LinkedList::removeFront()
+{
+    if (_head == nullptr)
+        return;
+
+    Node* temp = _head;
+    _head = _head->next;
+    delete temp;
+    --_size;
+}
+
 void LinkedList::remove(const size_t pos)
 {
+    if (pos != 0) {
+        Node* temp = _head;
+        for (size_t i = 0; i < pos - 1; i++)
+            temp = temp->next;
+
+        Node* newNode = temp->next;
+        temp->next = temp->next->next;
+        delete newNode;
+        --_size;
+    }
+    else
+        removeFront();
 }
+
+void LinkedList::removeBack()
+{
+    remove(_size - 1);
+}
+
 
 void LinkedList::removeNextNode(Node* node)
 {
+    Node* currentDeleteNode = node->next;
+    Node* currentNode = currentDeleteNode->next;
+    node->next = currentNode;
+    delete currentDeleteNode;
+    --_size;
 }
 
 long long int LinkedList::findIndex(const ValueType& value) const
 {
-	return 0;
+    Node* currentNode = _head;
+    for (int i = 0; i < _size; ++i) {
+        if (currentNode->value == value)
+            return i;
+
+        currentNode = currentNode->next;
+    }
+    throw std::out_of_range("Value is out of range");
 }
 
 LinkedList::Node* LinkedList::findNode(const ValueType& value) const
 {
-	return nullptr;
+    Node* currentNode = _head;
+    for (int i = 0; i < _size; ++i) {
+        if (currentNode->value == value)
+            return currentNode;
+
+        currentNode = currentNode->next;
+    }
+    throw std::out_of_range("Value is out of range");
 }
 
 void LinkedList::reverse()
 {
+    Node* prev = nullptr;
+    Node* next = nullptr;
+    Node* curr = _head;
+
+    while (curr != nullptr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    _head = prev;
 }
 
 LinkedList LinkedList::reverse() const
 {
-	return LinkedList();
+    Node* prev = nullptr;
+    Node* next = nullptr;
+    Node* curr = _head;
+
+    while (curr != nullptr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    LinkedList list;
+    list._head = prev;
+    list._size = _size;
+    return list;
 }
 
 LinkedList LinkedList::getReverseList() const
 {
-	return LinkedList();
+    Node* prev = nullptr;
+    Node* next = nullptr;
+    Node* curr = _head;
+
+    while (curr != nullptr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    LinkedList list;
+    list._head = prev;
+    list._size = _size;
+    return list;
 }
 
 size_t LinkedList::size() const

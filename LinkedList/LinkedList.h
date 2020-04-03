@@ -1,4 +1,8 @@
-#pragma once
+#ifndef PARSER_H
+#define PARSER_H
+
+#include <cstddef>
+
 
 // потом поменяем на шаблоны
 using ValueType = double;
@@ -11,13 +15,13 @@ class LinkedList
 	// поле с ключем в узел и, с учетом этого, поменять методы LinkedList 
 	// (доступ по ключу, поиск по ключу и т.д.)
 	struct Node {
-		Node(const ValueType& value, Node* next = nullptr);
+        Node(const ValueType& value, Node* next = nullptr);
 		~Node();
 
 		void insertNext(const ValueType& value);
 		void removeNext();
 
-		ValueType value;
+        ValueType value;
 		Node* next;
 	};
 
@@ -34,7 +38,7 @@ public:
 	////
 
 	// доступ к значению элемента по индексу
-	ValueType& operator[](const size_t pos) const;
+    ValueType& operator[](const size_t pos) const;
 	// доступ к узлу по индексу
 	LinkedList::Node* getNode(const size_t pos) const;
 	
@@ -48,10 +52,10 @@ public:
 	void pushFront(const ValueType& value);
 
 	// удаление
+    void removeFront();
+    void removeBack();
 	void remove(const size_t pos);
 	void removeNextNode(Node* node);
-	void removeFront();
-	void removeBack();
 	
 	// поиск, О(n)
 	long long int findIndex(const ValueType& value) const;
@@ -70,3 +74,4 @@ private:
 	void forceNodeDelete(Node* node);
 };
 
+#endif //PARSER_H
