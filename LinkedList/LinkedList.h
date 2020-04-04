@@ -3,7 +3,6 @@
 
 #include <cstddef>
 
-
 // потом поменяем на шаблоны
 using ValueType = double;
 
@@ -16,13 +15,13 @@ class LinkedList
 	// (доступ по ключу, поиск по ключу и т.д.)
 	struct Node {
         Node(const ValueType& value, Node* next = nullptr);
-		~Node();
+	~Node();
 
-		void insertNext(const ValueType& value);
-		void removeNext();
+	void insertNext(const ValueType& value);
+	void removeNext();
 
         ValueType value;
-		Node* next;
+	Node* next;
 	};
 
 public:
@@ -38,22 +37,22 @@ public:
 	////
 
 	// доступ к значению элемента по индексу
-    ValueType& operator[](const size_t pos) const;
+    	ValueType& operator[](const size_t pos) const;
 	// доступ к узлу по индексу
 	LinkedList::Node* getNode(const size_t pos) const;
 	
 	// вставка элемента по индексу, сначала ищем, куда вставлять (О(n)), потом вставляем (O(1))
 	void insert(const size_t pos, const ValueType& value);
 	// вставка элемента после узла, (O(1))
-	static void insertAfterNode(Node* node, const ValueType& value);
+	void insertAfterNode(Node* node, const ValueType& value);
 	// вставка в конец (О(n))
 	void pushBack(const ValueType& value);
 	// вставка в начало (О(1))
 	void pushFront(const ValueType& value);
 
 	// удаление
-    void removeFront();
-    void removeBack();
+    	void removeFront();
+    	void removeBack();
 	void remove(const size_t pos);
 	void removeNextNode(Node* node);
 	
@@ -62,8 +61,8 @@ public:
 	Node* findNode(const ValueType& value) const;
 
 	// разворот списка
-	void reverse();						// изменение текущего списка
-	LinkedList reverse() const;			// полчение нового списка (для константных объектов)
+	void reverse();				// изменение текущего списка
+	LinkedList reverse() const;		// полчение нового списка (для константных объектов)
 	LinkedList getReverseList() const;	// чтобы неконстантный объект тоже мог возвращать новый развернутый список
 
 	size_t size() const;

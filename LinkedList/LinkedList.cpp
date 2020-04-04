@@ -138,6 +138,7 @@ void LinkedList::insert(const size_t pos, const ValueType& value)
 void LinkedList::insertAfterNode(Node* node, const ValueType& value)
 {
 	node->insertNext(value);
+    ++_size;
 }
 
 void LinkedList::pushBack(const ValueType& value)
@@ -236,24 +237,6 @@ void LinkedList::reverse()
     _head = prev;
 }
 
-LinkedList LinkedList::reverse() const
-{
-    Node* prev = nullptr;
-    Node* next = nullptr;
-    Node* curr = _head;
-
-    while (curr != nullptr) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
-    }
-    LinkedList list;
-    list._head = prev;
-    list._size = _size;
-    return list;
-}
-
 LinkedList LinkedList::getReverseList() const
 {
     Node* prev = nullptr;
@@ -269,7 +252,13 @@ LinkedList LinkedList::getReverseList() const
     LinkedList list;
     list._head = prev;
     list._size = _size;
+
     return list;
+}
+
+LinkedList LinkedList::reverse() const
+{
+    return getReverseList();
 }
 
 size_t LinkedList::size() const
