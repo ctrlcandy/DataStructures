@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
 
 #include <cstddef>
 
@@ -73,4 +73,4 @@ private:
 	void forceNodeDelete(Node* node);
 };
 
-#endif //PARSER_H
+#endif //LINKEDLIST_H
