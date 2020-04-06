@@ -1,35 +1,35 @@
-#include "LinkedList.h"
+#include "DoublyLinkedList.h"
 
 #include <cassert>
 #include <stdexcept>
 
-LinkedList::Node::Node(const ValueType& value, Node* prev, Node* next) :
+DoublyLinkedList::Node::Node(const ValueType& value, Node* prev, Node* next) :
         value(value), prev(prev), next(next) {};
 
-LinkedList::Node::~Node()
+DoublyLinkedList::Node::~Node()
 {
 	// ничего не удаляем, т.к. агрегация
 }
 
-void LinkedList::Node::insertNext(const ValueType& value)
+void DoublyLinkedList::Node::insertNext(const ValueType& value)
 {
 	Node* newNode = new Node(value,this, this->next);
 	this->next = newNode;
 }
 
-void LinkedList::Node::removeNext()
+void DoublyLinkedList::Node::removeNext()
 {
 	Node* removeNode = this->next;
 	Node* newNext = removeNode->next;
 	delete removeNode;
 	this->next = newNext;
-    	newNext->prev = this;
+    newNext->prev = this;
 }
 
-LinkedList::LinkedList()
+DoublyLinkedList::DoublyLinkedList()
 	: _head(nullptr), _tail(nullptr), _size(0) {}
 
-LinkedList::LinkedList(const LinkedList& copyList)
+DoublyLinkedList::DoublyLinkedList(const DoublyLinkedList& copyList)
 {
 	_size = copyList._size;
 	if (_size == 0) {
@@ -45,18 +45,18 @@ LinkedList::LinkedList(const LinkedList& copyList)
 
 	while (currentCopyNode->next) {
         currentCopyNode = currentCopyNode->next;
-		currentNode->next = new Node(currentCopyNode->value, currentNode);
-		currentNode = currentNode->next;
+	currentNode->next = new Node(currentCopyNode->value, currentNode);
+	currentNode = currentNode->next;
 	}
 	_tail = currentNode;
 }
 
-LinkedList& LinkedList::operator=(const LinkedList& copyList)
+DoublyLinkedList& DoublyLinkedList::operator=(const DoublyLinkedList& copyList)
 {
 	if (this == &copyList) {
 		return *this;
 	}
-	LinkedList* bufList = new LinkedList(copyList);
+	DoublyLinkedList* bufList = new DoublyLinkedList(copyList);
 	this->_size = bufList->_size;
 	this->_head = bufList->_head;
     	this->_tail = bufList->_tail;
@@ -65,7 +65,7 @@ LinkedList& LinkedList::operator=(const LinkedList& copyList)
 }
 
 //Конструктор перемещения
-LinkedList::LinkedList(LinkedList&& moveList) noexcept
+DoublyLinkedList::DoublyLinkedList(DoublyLinkedList&& moveList) noexcept
 {
 	this->_size = moveList._size;
     	this->_tail = moveList._tail;
@@ -77,7 +77,7 @@ LinkedList::LinkedList(LinkedList&& moveList) noexcept
 }
 
 //Перемещающий оператор присванивания
-LinkedList& LinkedList::operator=(LinkedList&& moveList) noexcept
+DoublyLinkedList& DoublyLinkedList::operator=(DoublyLinkedList&& moveList) noexcept
 {
 	if (this == &moveList) {
 		return *this;
@@ -94,17 +94,17 @@ LinkedList& LinkedList::operator=(LinkedList&& moveList) noexcept
 	return *this;
 }
 
-LinkedList::~LinkedList()
+DoublyLinkedList::~DoublyLinkedList()
 {
 	forceNodeDelete(_head);
 }
 
-ValueType& LinkedList::operator[](const size_t pos) const
+ValueType& DoublyLinkedList::operator[](const size_t pos) const
 {
 	return getNode(pos)->value;
 }
 
-LinkedList::Node* LinkedList::getNode(const size_t pos) const
+DoublyLinkedList::Node* DoublyLinkedList::getNode(const size_t pos) const
 {
 	if (pos < 0) {
 		assert(pos < 0);
@@ -112,15 +112,25 @@ LinkedList::Node* LinkedList::getNode(const size_t pos) const
 	else if (pos >= this->_size) {
 		assert(pos >= this->_size);
 	}
-	Node* bufNode = _head;
-	for (int i = 0; i < pos; i++) {
-		bufNode = bufNode->next;
+
+	size_t halfSize = _size / 2;
+    	Node* bufNode;
+
+	if (pos < halfSize) {
+	    bufNode = _head;
+	    for (int i = 0; i < pos; i++)
+		    bufNode = bufNode->next;
+	}
+	else {
+        bufNode = _tail;
+        for (int i = _size - 1; i > pos; i--)
+            bufNode = bufNode->prev;
 	}
 
 	return bufNode;
 }
 
-void LinkedList::insert(const size_t pos, const ValueType& value)
+void DoublyLinkedList::insert(const size_t pos, const ValueType& value)
 {
     if (pos < 0) {
         assert(pos < 0);
@@ -128,26 +138,23 @@ void LinkedList::insert(const size_t pos, const ValueType& value)
     else if (pos > this->_size) {
         assert(pos > this->_size);
     }
-    else if (pos == 0) {
+
+    if (pos == 0)
         pushFront(value);
-    }
-    else {
-        Node* bufNode = this->_head;
-        for (size_t i = 0; i < pos-1; ++i) {
-            bufNode = bufNode->next;
-        }
-        bufNode->insertNext(value);
-        ++_size;
-    }
+
+    Node* bufNode = getNode(pos - 1);
+    bufNode->insertNext(value);
+    ++_size;
+
 }
 
-void LinkedList::insertAfterNode(Node* node, const ValueType& value)
+void DoublyLinkedList::insertAfterNode(Node* node, const ValueType& value)
 {
     node->insertNext(value);
     ++_size;
 }
 
-void LinkedList::pushBack(const ValueType& value)
+void DoublyLinkedList::pushBack(const ValueType& value)
 {
     Node* newNode = new Node(value, _tail);
     if (_tail != nullptr) {
@@ -160,7 +167,7 @@ void LinkedList::pushBack(const ValueType& value)
     ++_size;
 }
 
-void LinkedList::pushFront(const ValueType& value)
+void DoublyLinkedList::pushFront(const ValueType& value)
 {
     Node* newNode = new Node(value, nullptr, _head);
     if (_head != nullptr) {
@@ -173,7 +180,7 @@ void LinkedList::pushFront(const ValueType& value)
     ++_size;
 }
 
-void LinkedList::removeFront()
+void DoublyLinkedList::removeFront()
 {
     if (_head == nullptr)
         return;
@@ -184,7 +191,7 @@ void LinkedList::removeFront()
     --_size;
 }
 
-void LinkedList::removeBack()
+void DoublyLinkedList::removeBack()
 {
     if (_tail == nullptr)
         return;
@@ -195,23 +202,26 @@ void LinkedList::removeBack()
     --_size;
 }
 
-void LinkedList::remove(const size_t pos)
+void DoublyLinkedList::remove(const size_t pos)
 {
-    if (pos != 0) {
-        Node* temp = _head;
-        for (size_t i = 0; i < pos - 1; i++)
-            temp = temp->next;
+    if (pos == 0) {
+        removeFront();
+    }
+    else if (pos == _size - 1) {
+        removeBack();
+    }
+    else
+    {
+        Node* temp = getNode(pos - 1);
 
         Node* newNode = temp->next;
         temp->next = temp->next->next;
         delete newNode;
         --_size;
     }
-    else
-        removeFront();
 }
 
-void LinkedList::removeNextNode(Node* node)
+void DoublyLinkedList::removeNextNode(Node* node)
 {
     Node* currentDeleteNode = node->next;
     Node* currentNode = currentDeleteNode->next;
@@ -222,7 +232,7 @@ void LinkedList::removeNextNode(Node* node)
     --_size;
 }
 
-long long int LinkedList::findIndex(const ValueType& value) const
+long long int DoublyLinkedList::findIndex(const ValueType& value) const
 {
     Node* currentNode = _head;
     for (int i = 0; i < _size; ++i) {
@@ -231,11 +241,10 @@ long long int LinkedList::findIndex(const ValueType& value) const
 
         currentNode = currentNode->next;
     }
-
     throw std::out_of_range("Value is out of range");
 }
 
-LinkedList::Node* LinkedList::findNode(const ValueType& value) const
+DoublyLinkedList::Node* DoublyLinkedList::findNode(const ValueType& value) const
 {
     Node* currentNode = _head;
     for (int i = 0; i < _size; ++i) {
@@ -244,58 +253,57 @@ LinkedList::Node* LinkedList::findNode(const ValueType& value) const
 
         currentNode = currentNode->next;
     }
-
     throw std::out_of_range("Value is out of range");
 }
 
-void LinkedList::reverse()
+void DoublyLinkedList::reverse()
 {
-    Node* prev = nullptr;
-    Node* next = nullptr;
-    Node* curr = _head;
+    Node* temp = _head;
+    _head = _tail;
+    _tail = temp;
 
+    Node* curr = _head;
     while (curr != nullptr) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
+        temp = curr->next;
+        curr->next = curr->prev;
+        curr->prev = temp;
+        curr = curr->next;
     }
-    _head = prev;
 }
 
-LinkedList LinkedList::reverse() const
+DoublyLinkedList DoublyLinkedList::reverse() const
 {
     return getReverseList();
 }
 
-LinkedList LinkedList::getReverseList() const
+DoublyLinkedList DoublyLinkedList::getReverseList() const
 {
-    Node* prev = nullptr;
-    Node* next = nullptr;
-    Node* curr = this->_head;
+    DoublyLinkedList list(*this);
+    Node* temp = list._head;
+    list._head = list._tail;
+    list._tail = temp;
 
+    Node* curr = list._head;
     while (curr != nullptr) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
+        temp = curr->next;
+        curr->next = curr->prev;
+        curr->prev = temp;
+        curr = curr->next;
     }
-    LinkedList* list = new LinkedList();
-    list->_head = prev;
-    list->_size = _size;
 
-    return *list;
+    return list;
 }
 
-size_t LinkedList::size() const
+size_t DoublyLinkedList::size() const
 {
 	return _size;
 }
 
-void LinkedList::forceNodeDelete(Node* node)
+void DoublyLinkedList::forceNodeDelete(Node* node)
 {
-	if (node == nullptr) 
+	if (node == nullptr) {
 		return;
+	}
 
 	Node* nextDeleteNode = node->next;
 	delete node;

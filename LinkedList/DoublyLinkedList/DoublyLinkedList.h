@@ -1,18 +1,17 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef DOUBLYLINKEDLIST_H
+#define DOUBLYLINKEDLIST_H
 
 #include <cstddef>
-
 
 // потом поменяем на шаблоны
 using ValueType = double;
 
-class LinkedList
+class DoublyLinkedList
 {
 	// класс узла списка
 	// по своей сути, может содержать любые данные,
 	// можно реализовать и ассоциативный массив, просто добавив 
-	// поле с ключем в узел и, с учетом этого, поменять методы LinkedList 
+	// поле с ключем в узел и, с учетом этого, поменять методы DoublyLinkedList
 	// (доступ по ключу, поиск по ключу и т.д.)
 	struct Node {
         Node(const ValueType& value, Node* prev = nullptr, Node* next = nullptr);
@@ -28,20 +27,20 @@ class LinkedList
 
 public:
 	////
-	LinkedList();
-	LinkedList(const LinkedList& copyList);
-	LinkedList& operator=(const LinkedList& copyList);
+	DoublyLinkedList();
+	DoublyLinkedList(const DoublyLinkedList& copyList);
+	DoublyLinkedList& operator=(const DoublyLinkedList& copyList);
 
-	LinkedList(LinkedList&& moveList) noexcept;
-	LinkedList& operator=(LinkedList&& moveList) noexcept;
+	DoublyLinkedList(DoublyLinkedList&& moveList) noexcept;
+	DoublyLinkedList& operator=(DoublyLinkedList&& moveList) noexcept;
 
-	~LinkedList();
+	~DoublyLinkedList();
 	////
 
 	// доступ к значению элемента по индексу
     	ValueType& operator[](const size_t pos) const;
 	// доступ к узлу по индексу
-	LinkedList::Node* getNode(const size_t pos) const;
+	DoublyLinkedList::Node* getNode(const size_t pos) const;
 	
 	// вставка элемента по индексу, сначала ищем, куда вставлять (О(n)), потом вставляем (O(1))
 	void insert(const size_t pos, const ValueType& value);
@@ -63,9 +62,9 @@ public:
 	Node* findNode(const ValueType& value) const;
 
 	// разворот списка
-	void reverse();				// изменение текущего списка
-	LinkedList reverse() const;		// полчение нового списка (для константных объектов)
-	LinkedList getReverseList() const;	// чтобы неконстантный объект тоже мог возвращать новый развернутый список
+	void reverse();					// изменение текущего списка
+	DoublyLinkedList reverse() const;		// полчение нового списка (для константных объектов)
+	DoublyLinkedList getReverseList() const;	// чтобы неконстантный объект тоже мог возвращать новый развернутый список
 
 	size_t size() const;
 private:
@@ -76,4 +75,4 @@ private:
 	void forceNodeDelete(Node* node);
 };
 
-#endif //PARSER_H
+#endif //DOUBLYLINKEDLIST_H
