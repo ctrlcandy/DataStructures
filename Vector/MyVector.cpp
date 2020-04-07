@@ -72,8 +72,6 @@ MyVector& MyVector::operator=(const MyVector &copy) {
 
 MyVector::~MyVector() {
     delete[] _data;
-    _size = 0;
-    _capacity = 0;
 }
 
 MyVector::MyVector(MyVector &&moveVector) noexcept {
@@ -83,10 +81,6 @@ MyVector::MyVector(MyVector &&moveVector) noexcept {
     _strategy = moveVector._strategy;
     _coef = moveVector._coef;
 
-    moveVector._size = 0;
-    moveVector._capacity = 0;
-    moveVector._strategy = ResizeStrategy::Multiplicative;
-    moveVector._coef = 1.5f;
     moveVector._data = nullptr;
 }
 
@@ -98,10 +92,6 @@ MyVector& MyVector::operator=(MyVector &&moveVector) noexcept {
     _strategy = moveVector._strategy;
     _coef = moveVector._coef;
 
-    moveVector._size = 0;
-    moveVector._capacity = 0;
-    moveVector._strategy = ResizeStrategy::Multiplicative;
-    moveVector._coef = 1.5f;
     moveVector._data = nullptr;
 
     return *this;
@@ -280,3 +270,6 @@ void MyVector::clear() {
     _size = 0;
 }
 
+MyVector MyVector::sortedSquares(const MyVector &vec, SortedStrategy strategy) {
+    return MyVector();
+}
