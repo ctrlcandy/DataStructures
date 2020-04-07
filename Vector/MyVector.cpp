@@ -270,6 +270,45 @@ void MyVector::clear() {
     _size = 0;
 }
 
-MyVector MyVector::sortedSquares(const MyVector &vec, SortedStrategy strategy) {
-    return MyVector();
+MyVector MyVector::sortedSquares(const MyVector &vector, SortedStrategy strategy) {
+    MyVector res;
+    res._data = new ValueType[vector._capacity];
+    res._size = vector._size;
+    res._capacity = vector._capacity;
+
+    size_t left = 0;
+    size_t right = vector._size - 1;
+
+    int currentLeft = vector._data[0] * vector._data[0];
+    int currentRight = vector._data[vector._size - 1] * vector._data[vector._size - 1];
+
+    if (strategy == SortedStrategy::Increase) {
+        for (int i = vector._size - 1; i > 0; --i) {
+            if (currentLeft > currentRight) {
+                res._data[i] = currentLeft;
+                ++left;
+                currentLeft = vector._data[left] * vector._data[left];
+            }
+            else {
+                res._data[i] = currentRight;
+                --right;
+                currentRight = vector._data[right] * vector._data[right];
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < vector._size - 1; ++i) {
+            if (currentLeft > currentRight) {
+                res._data[i] = currentLeft;
+                ++left;
+                currentLeft = vector._data[left] * vector._data[left];
+            }
+            else {
+                res._data[i] = currentRight;
+                --right;
+                currentRight = vector._data[right] * vector._data[right];
+            }
+        }
+    }
+    return res;
 }
