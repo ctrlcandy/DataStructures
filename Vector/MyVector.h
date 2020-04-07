@@ -9,8 +9,8 @@ enum class ResizeStrategy {
 };
 
 enum class SortedStrategy {
-    	Increase,
-    	Decrease
+    Increase,
+    Decrease
 };
 
 // тип значений в векторе
@@ -19,7 +19,6 @@ using ValueType = double;
 
 class MyVector
 {
-
 public:
 
     class Iterator {
@@ -28,18 +27,19 @@ public:
         Iterator(ValueType* p) : ptr(p) {};
         Iterator(const Iterator& it) : ptr(it.ptr) {};
 
-        ValueType& operator+ (int n) { return *(ptr + n); }
-        ValueType& operator- (int n) { return *(ptr - n); }
+        Iterator operator+ (int n) { return Iterator(ptr + n); }
+        Iterator operator- (int n) { return Iterator(ptr - n); }
 
-        ValueType& operator++ () { return *++ptr; }
-        ValueType& operator-- () { return *--ptr; }
+        Iterator operator++ () { return ++ptr; }
+        Iterator operator-- () { return --ptr; }
 
-        ValueType& operator++ (int) { return *ptr++; }
-        ValueType& operator-- (int) { return *ptr--; }
+        Iterator operator++ (int) { return ptr++; }
+        Iterator operator-- (int) { return ptr--; }
 
-        bool operator!=(const Iterator& it) const { return ptr != it.ptr; };
-        bool operator==(const Iterator& it ) const { return ptr == it.ptr; };
-        ValueType operator*() { return *ptr; };
+
+        bool operator!=(const Iterator& it) const { return ptr != it.ptr; }
+        bool operator==(const Iterator& it ) const { return ptr == it.ptr; }
+        ValueType& operator*() { return *ptr; }
 
     private:
         ValueType* ptr;
@@ -53,8 +53,8 @@ public:
 
 	~MyVector();
 
-    	MyVector(MyVector&& moveVector) noexcept;
-    	MyVector& operator=(MyVector&& moveVector) noexcept;
+    MyVector(MyVector&& moveVector) noexcept;
+    MyVector& operator=(MyVector&& moveVector) noexcept;
 
 	size_t capacity() const;
 	size_t size() const;
@@ -69,7 +69,7 @@ public:
 	void pushBack(const ValueType& value);
 	// вставить,
 	// должен работать за O(n)
-	void insert(const size_t i, const ValueType& value);		// версия для одного значения
+	void insert(const size_t i, const ValueType& value);	// версия для одного значения
 	void insert(const size_t i, const MyVector& value);		// версия для вектора
 
 	// удалить с конца,
@@ -95,27 +95,27 @@ public:
 	void resize(const size_t size, const ValueType = 0.0);
 
 	// очистка вектора, без изменения capacity
-    	void clear();
+	void clear();
 
 	// итераторы
-    	using iterator = Iterator;
-    	using const_iterator = Iterator;
+    using iterator = Iterator;
+    using const_iterator = Iterator;
 
-    	iterator begin() { return Iterator(_data); };
-    	iterator end() { return Iterator(_data + _size); };
+    iterator begin() { return Iterator(_data); };
+    iterator end() { return Iterator(_data + _size); };
 
-    	const_iterator begin() const { return Iterator(_data); };
-    	const_iterator end() const { return Iterator(_data + _size); };
+    const_iterator begin() const { return Iterator(_data); };
+    const_iterator end() const { return Iterator(_data + _size); };
 
-    	MyVector sortedSquares(const MyVector& vec, SortedStrategy = SortedStrategy::Increase);
+    MyVector sortedSquares(const MyVector& vec, SortedStrategy = SortedStrategy::Increase);
 
 private:
 	ValueType* _data;
 	size_t _size;
 	size_t _capacity;
 
-    	ResizeStrategy _strategy;
-    	float _coef;
+    ResizeStrategy _strategy;
+    float _coef;
 
 	void resize(size_t size, ResizeStrategy strategy, float coef);
 };
