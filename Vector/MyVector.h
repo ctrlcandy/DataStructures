@@ -36,7 +36,7 @@ public:
 	void pushBack(const ValueType& value);
 	// вставить,
 	// должен работать за O(n)
-	void insert(const size_t i, const ValueType& value);	// версия для одного значения
+	void insert(const size_t i, const ValueType& value);		// версия для одного значения
 	void insert(const size_t i, const MyVector& value);		// версия для вектора
 
 	// удалить с конца,
@@ -67,5 +67,10 @@ private:
 	ValueType* _data;
 	size_t _size;
 	size_t _capacity;
+
+ 	ResizeStrategy _strategy;
+    	float _coef;
+
+	void resize(size_t size, ResizeStrategy strategy, float coef);
 };
 
