@@ -53,9 +53,11 @@ LinkedList& LinkedList::operator=(const LinkedList& copyList)
 	if (this == &copyList) {
 		return *this;
 	}
+
 	LinkedList* bufList = new LinkedList(copyList);
-	this->_size = bufList._size;
-	this->_head = bufList._head;
+    forceNodeDelete(_head);
+	this->_size = bufList->_size;
+	this->_head = bufList->_head;
 
 	return *this;
 }
@@ -207,7 +209,7 @@ long long int LinkedList::findIndex(const ValueType& value) const
 
         currentNode = currentNode->next;
     }
-    throw std::out_of_range("Value is out of range");
+    throw std::invalid_argument("Value not found");
 }
 
 LinkedList::Node* LinkedList::findNode(const ValueType& value) const
@@ -219,7 +221,7 @@ LinkedList::Node* LinkedList::findNode(const ValueType& value) const
 
         currentNode = currentNode->next;
     }
-    throw std::out_of_range("Value is out of range");
+    throw std::invalid_argument("Value not found");
 }
 
 void LinkedList::reverse()
@@ -240,9 +242,10 @@ void LinkedList::reverse()
 
 LinkedList LinkedList::getReverseList() const
 {
+    LinkedList list(*this);
     Node* prev = nullptr;
     Node* next = nullptr;
-    Node* curr = _head;
+    Node* curr = list._head;
 
     while (curr != nullptr) {
         next = curr->next;
@@ -251,11 +254,10 @@ LinkedList LinkedList::getReverseList() const
         curr = next;
     }
 
-    LinkedList* list = new LinkedList();
-    list->_head = prev;
-    list->_size = _size;
+    list._head = prev;
+    list._size = _size;
 
-    return *list;
+    return list;
 }
 
 LinkedList LinkedList::reverse() const
