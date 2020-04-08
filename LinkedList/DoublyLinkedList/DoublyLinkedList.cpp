@@ -23,7 +23,7 @@ void DoublyLinkedList::Node::removeNext()
 	Node* newNext = removeNode->next;
 	delete removeNode;
 	this->next = newNext;
-    newNext->prev = this;
+    	newNext->prev = this;
 }
 
 DoublyLinkedList::DoublyLinkedList()
@@ -56,7 +56,10 @@ DoublyLinkedList& DoublyLinkedList::operator=(const DoublyLinkedList& copyList)
 	if (this == &copyList) {
 		return *this;
 	}
+
 	DoublyLinkedList* bufList = new DoublyLinkedList(copyList);
+	forceNodeDelete(_head);
+
 	this->_size = bufList->_size;
 	this->_head = bufList->_head;
     	this->_tail = bufList->_tail;
@@ -82,7 +85,9 @@ DoublyLinkedList& DoublyLinkedList::operator=(DoublyLinkedList&& moveList) noexc
 	if (this == &moveList) {
 		return *this;
 	}
+
 	forceNodeDelete(_head);
+
 	this->_size = moveList._size;
 	this->_tail = moveList._tail;
 	this->_head = moveList._head;
