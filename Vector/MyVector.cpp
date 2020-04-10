@@ -1,6 +1,5 @@
 #include <cmath>
 #include <stdexcept>
-#include <cstring>
 
 #include "MyVector.h"
 
@@ -23,10 +22,8 @@ void MyVector::resize() {
 
     _data = new ValueType[_capacity];
     /*if (_data != nullptr) {
-        ValueType *tmp_data = new ValueType[sizeof(_data)/sizeof(_data[0])];
-        memcpy(tmp_data, _data, sizeof(ValueType) * (sizeof(_data)/sizeof(_data[0])));
-        delete[] tmp_data;
-        _data = new ValueType[_capacity];
+        // тут должно быть что-то адекватное в плане выделения памяти, но
+        // я пока не придумала, что именно
     }
     else
     {
@@ -34,21 +31,15 @@ void MyVector::resize() {
     } */
 }
 
-MyVector::MyVector(size_t size, ResizeStrategy strategy, float coef) {
-    _size = size;
-    _capacity = size;
-    _strategy = strategy;
-    _coef = coef;
-
+MyVector::MyVector(size_t size, ResizeStrategy strategy, float coef) :
+    _size(size), _capacity (size), _strategy (strategy), _coef (coef)
+{
     resize();
 }
 
-MyVector::MyVector(size_t size, ValueType value, ResizeStrategy strategy, float coef) {
-    _size = size;
-    _capacity = size;
-    _strategy = strategy;
-    _coef = coef;
-
+MyVector::MyVector(size_t size, ValueType value, ResizeStrategy strategy, float coef) :
+    _size(size), _capacity (size), _strategy (strategy), _coef (coef)
+{
     resize();
 
     for (size_t i = 0; i < _size; ++i) {
@@ -56,12 +47,10 @@ MyVector::MyVector(size_t size, ValueType value, ResizeStrategy strategy, float 
     }
 }
 
-MyVector::MyVector(const MyVector &copy) {
-    _size = copy._size;
-    _capacity = copy._capacity;
-    _strategy = copy._strategy;
-    _coef = copy._coef;
-
+MyVector::MyVector(const MyVector &copy) :
+    _size(copy._size), _capacity (copy._capacity),
+    _strategy (copy._strategy), _coef (copy._coef)
+{
     _data = new ValueType[_capacity];
     for (size_t i = 0; i < _size; ++i) {
         _data[i] = copy._data[i];
