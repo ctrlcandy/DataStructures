@@ -3,7 +3,17 @@
 
 #include "MyVector.h"
 
+void MyVector::deleteData() {
+    if (_data != nullptr) {
+        ValueType *bufData = new ValueType[_capacity];
+        std::copy(bufData, bufData + _capacity, _data);
+        delete[]bufData;
+    }
+}
+
 void MyVector::resize() {
+    deleteData();
+
     switch (_strategy) {
         case (ResizeStrategy::Multiplicative) :
             if (_size == 0)
@@ -21,14 +31,7 @@ void MyVector::resize() {
     }
 
     _data = new ValueType[_capacity];
-    /*if (_data != nullptr) {
-        // тут должно быть что-то адекватное в плане выделения памяти, но
-        // я пока не придумала, что именно
-    }
-    else
-    {
-        _data = new ValueType[_capacity];
-    } */
+
 }
 
 MyVector::MyVector(size_t size, ResizeStrategy strategy, float coef) :
@@ -47,12 +50,11 @@ MyVector::MyVector(size_t size, ValueType value, ResizeStrategy strategy, float 
     }
 }
 
-MyVector::MyVector(const MyVector &copy) :
-    _size(copy._size), _capacity (copy._capacity),
-    _strategy (copy._strategy), _coef (copy._coef)
+MyVector::MyVector(const MyVector &copy):
+    _size(copy._size), _capacity (copy._capacity), _strategy (copy._strategy), _coef (copy._coef)
 {
     _data = new ValueType[_capacity];
-    for (size_t i = 0; i < _size; ++i) {
+    for (size_t i = 0; i < copy._capacity; ++i) {
         _data[i] = copy._data[i];
     }
 }
@@ -67,8 +69,7 @@ MyVector& MyVector::operator=(const MyVector &copy) {
     _coef = copy._coef;
 
 
-    //delete[] _data;
-
+    deleteData();
     _data = new ValueType[_capacity];
     for (size_t i = 0; i < _size; ++i) {
         _data[i] = copy._data[i];
@@ -79,6 +80,7 @@ MyVector& MyVector::operator=(const MyVector &copy) {
 
 MyVector::~MyVector() {
     delete[] _data;
+    _data = nullptr;
 }
 
 MyVector::MyVector(MyVector &&moveVector) noexcept {
@@ -235,6 +237,7 @@ long long int MyVector::find(const ValueType &value, bool isBegin) const {
 
 void MyVector::reserve(const size_t capacity) {
     MyVector bufVector(*this);
+    deleteData();
     _data = new ValueType[capacity]();
     _capacity = capacity;
 
@@ -262,9 +265,7 @@ void MyVector::resize(const size_t size, const ValueType value) {
 }
 
 void MyVector::clear() {
-    //for (size_t i = 0; i < _size; ++i)
-    // _data[i] = 0;
-
+    deleteData();
     _size = 0;
 }
 

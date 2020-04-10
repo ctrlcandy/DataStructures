@@ -69,7 +69,7 @@ public:
 	void pushBack(const ValueType& value);
 	// вставить,
 	// должен работать за O(n)
-	void insert(const size_t i, const ValueType& value);	// версия для одного значения
+	void insert(const size_t i, const ValueType& value);		// версия для одного значения
 	void insert(const size_t i, const MyVector& value);		// версия для вектора
 
 	// удалить с конца,
@@ -97,26 +97,27 @@ public:
 	// очистка вектора, без изменения capacity
 	void clear();
 
-	// итераторы
-    using iterator = Iterator;
-    using const_iterator = Iterator;
+    	using iterator = Iterator;
+    	using const_iterator = Iterator;
 
-    iterator begin() { return Iterator(_data); };
-    iterator end() { return Iterator(_data + _size); };
+    	iterator begin() { return Iterator(_data); };
+    	iterator end() { return Iterator(_data + _size); };
 
-    const_iterator begin() const { return Iterator(_data); };
-    const_iterator end() const { return Iterator(_data + _size); };
+    	const_iterator begin() const { return Iterator(_data); };
+    	const_iterator end() const { return Iterator(_data + _size); };
 
-    MyVector sortedSquares(const MyVector& vec, SortedStrategy = SortedStrategy::Increase);
+    	static MyVector sortedSquares(const MyVector& vec, SortedStrategy = SortedStrategy::Increase);
 
 private:
 	ValueType* _data;
 	size_t _size;
 	size_t _capacity;
 
-    ResizeStrategy _strategy;
-    float _coef;
+    	ResizeStrategy _strategy;
+    	float _coef;
 
-	void resize(size_t size, ResizeStrategy strategy, float coef);
+	void deleteData();
+	void resize();
+    	void resizeAndCopy();
 };
 
