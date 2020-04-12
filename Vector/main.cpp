@@ -90,6 +90,12 @@ int main() {
     std::cout << "Expected: " <<  10 << std::endl;
     std::cout << "Received: " << vectorFirst.find(0, false) << std::endl;
 
+    std::cout << "---sortedSquares---" << std::endl;
+    vectorFirst.popBack();
+    vectorFirst = MyVector::sortedSquares(vectorFirst, SortedStrategy::Increase);
+    for (size_t i : vectorFirst)
+        std::cout << i << " ";
+    std::cout << std::endl;
 
 
     std::cout << std::endl;
@@ -166,6 +172,7 @@ int main() {
         std::cout << i << " ";
     std::cout << std::endl;
 
+
     std::cout << "---Erase (const size_t i, const size_t len)---" << std::endl;
     vectorSecond.erase(2, 8);
     std::cout << "Expected: " <<  "0 1 0" << std::endl;
@@ -181,7 +188,6 @@ int main() {
     std::cout << "---find(isBegin = false)---" << std::endl;
     std::cout << "Expected: " <<  2 << std::endl;
     std::cout << "Received: " << vectorSecond.find(0, false) << std::endl;
-
 
     return 0;
 }

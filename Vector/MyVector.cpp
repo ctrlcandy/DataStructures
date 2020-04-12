@@ -43,9 +43,9 @@ MyVector::MyVector(size_t size, ValueType value, ResizeStrategy strategy, float 
     _data(nullptr), _size(size), _capacity (size), _strategy (strategy), _coef (coef)
 {
     resizeVector(size, coef);
-    for (size_t i = 0; i < _size; ++i) {
+    for (size_t i = 0; i < _size; ++i)
         _data[i] = value;
-    }
+
 }
 
 MyVector::MyVector(const MyVector &copy):
@@ -53,9 +53,8 @@ MyVector::MyVector(const MyVector &copy):
 {
     _data = new ValueType[_capacity];
 
-    for (size_t i = 0; i < copy._capacity; ++i) {
+    for (size_t i = 0; i < copy._capacity; ++i)
         _data[i] = copy._data[i];
-    }
 }
 
 MyVector& MyVector::operator=(const MyVector &copy) {
@@ -69,17 +68,17 @@ MyVector& MyVector::operator=(const MyVector &copy) {
 
 
     deleteData();
+
     _data = new ValueType[copy._capacity];
-    for (size_t i = 0; i < copy._size; ++i) {
+    for (size_t i = 0; i < copy._size; ++i)
         _data[i] = copy._data[i];
-    }
+
 
     return *this;
 }
 
 MyVector::~MyVector() {
     delete[] _data;
-    _data = nullptr;
 }
 
 MyVector::MyVector(MyVector &&moveVector) noexcept {
@@ -120,28 +119,23 @@ void MyVector::checkLoadFactorAndCopy(size_t numToCopy) {
     if (loadFactor() > 1 || loadFactor() <=  1/(_coef *_coef)) {
         MyVector bufVector(*this);
         checkLoadFactorAndResize();
-        bufVector._size = numToCopy;
-        for (size_t i = 0; i < bufVector._size; ++i)
+
+        for (size_t i = 0; i < numToCopy; ++i)
             _data[i] = bufVector._data[i];
     }
 }
 
 void MyVector::checkLoadFactorAndResize() {
-    if (loadFactor() > 1) {
-        if (_strategy == ResizeStrategy::Multiplicative) {
+    if (loadFactor() > 1)
             resizeVector(_size, _coef);
-        }
-        else if (_strategy == ResizeStrategy::Additive){
-            resizeVector(_size, _coef);
-        }
-    }
+
     else if (loadFactor() <=  1/(_coef *_coef)) {
-        if (_strategy == ResizeStrategy::Multiplicative) {
+        if (_strategy == ResizeStrategy::Multiplicative)
             resizeVector(_capacity, 1 / _coef);
-        }
-        else if (_strategy == ResizeStrategy::Additive){
+
+        else
             resizeVector(_size, _coef);
-        }
+
     }
 }
 
@@ -166,9 +160,9 @@ void MyVector::insert(const size_t idx, const ValueType &value) {
     ++_size;
     checkLoadFactorAndCopy(_size - 1);
 
-    for (size_t i = _size - 1; i > idx; --i) {
+    for (size_t i = _size - 1; i > idx; --i)
         _data[i] = _data [i - 1];
-    }
+
     _data[idx] = value;
 }
 
@@ -183,13 +177,12 @@ void MyVector::insert(const size_t idx, const MyVector &value) {
     _size += value._size;
     checkLoadFactorAndCopy(_size - value._size);
 
-    for (size_t i = _size; i > idx; --i) {
+    for (size_t i = _size; i > idx; --i)
         _data[i] = _data[i - value._size];
-    }
 
-    for (size_t i = idx; i < idx + value._size; ++i) {
+
+    for (size_t i = idx; i < idx + value._size; ++i)
         _data[i] = value._data[value._size - idx];
-    }
 }
 
 void MyVector::popBack() {

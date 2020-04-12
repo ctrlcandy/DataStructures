@@ -21,31 +21,33 @@ class MyVector
 {
 public:
 
-    class Iterator {
+    class MyIterator {
 
     public:
-        Iterator(ValueType* p) : ptr(p) {};
-        Iterator(const Iterator& it) : ptr(it.ptr) {};
+        MyIterator(ValueType* p) : ptr(p) {};
+        MyIterator(const MyIterator& it) : ptr(it.ptr) {};
 
-        Iterator operator+ (int n) { return Iterator(ptr + n); }
-        Iterator operator- (int n) { return Iterator(ptr - n); }
+        MyIterator operator+ (int n) { return MyIterator(ptr + n); }
+        MyIterator operator- (int n) { return MyIterator(ptr - n); }
 
-        Iterator operator++ () { return ++ptr; }
-        Iterator operator-- () { return --ptr; }
+        MyIterator operator++ () { return ++ptr; }
+        MyIterator operator-- () { return --ptr; }
 
-        Iterator operator++ (int) { return ptr++; }
-        Iterator operator-- (int) { return ptr--; }
+        MyIterator operator++ (int) { return ptr++; }
+        MyIterator operator-- (int) { return ptr--; }
 
 
-        bool operator!=(const Iterator& it) const { return ptr != it.ptr; }
-        bool operator==(const Iterator& it ) const { return ptr == it.ptr; }
+        bool operator!=(const MyIterator& it) const { return ptr != it.ptr; }
+        bool operator==(const MyIterator& it ) const { return ptr == it.ptr; }
+
         ValueType& operator*() { return *ptr; }
+		ValueType& operator->() { return *ptr; }
 
     private:
         ValueType* ptr;
     };
 
-	MyVector(size_t size = 0, ResizeStrategy = ResizeStrategy::Multiplicative, float coef = 1.5f);
+	explicit MyVector(size_t size = 0, ResizeStrategy = ResizeStrategy::Multiplicative, float coef = 1.5f);
 	MyVector(size_t size, ValueType value, ResizeStrategy = ResizeStrategy::Multiplicative, float coef = 1.5f);
 	
 	MyVector(const MyVector& copy);
@@ -98,14 +100,14 @@ public:
 	void clear();
 
 	// итераторы
-    using iterator = Iterator;
-    using const_iterator = Iterator;
+    using iterator = MyIterator;
+    using const_iterator = MyIterator;
 
-    iterator begin() { return Iterator(_data); };
-    iterator end() { return Iterator(_data + _size); };
+    iterator begin() { return MyIterator(_data); };
+    iterator end() { return MyIterator(_data + _size); };
 
-    const_iterator begin() const { return Iterator(_data); };
-    const_iterator end() const { return Iterator(_data + _size); };
+    const_iterator begin() const { return MyIterator(_data); };
+    const_iterator end() const { return MyIterator(_data + _size); };
 
     static MyVector sortedSquares(const MyVector& vector, SortedStrategy = SortedStrategy::Increase);
 
