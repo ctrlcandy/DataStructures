@@ -118,7 +118,7 @@ private:
     float _coef;
 
     void deleteData();
-	void resize();
+	void resizeVector(size_t capacity, float coef);
 	void checkLoadFactorAndCopy(size_t numToCopy);
     void checkLoadFactorAndResize();
 };

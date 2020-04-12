@@ -11,7 +11,7 @@ void MyVector::deleteData() {
     }
 }
 
-void MyVector::resize() {
+void MyVector::resizeVector(size_t capacity, float coef) {
     deleteData();
 
     switch (_strategy) {
@@ -19,11 +19,11 @@ void MyVector::resize() {
             if (_size == 0)
                 _capacity = 1;
             else
-                _capacity = std::ceil(_coef * _capacity);
+                _capacity = std::ceil(coef * capacity);
             break;
 
         case (ResizeStrategy::Additive):
-            _capacity += std::ceil(_coef);
+            _capacity = capacity + std::ceil(coef);
             break;
 
         default:
@@ -34,15 +34,15 @@ void MyVector::resize() {
 }
 
 MyVector::MyVector(size_t size, ResizeStrategy strategy, float coef):
-    _size(size), _capacity (size), _strategy (strategy), _coef (coef)
+   _data(nullptr), _size(size), _capacity (1), _strategy (strategy), _coef (coef)
 {
-    resize();
+    resizeVector(size, coef);
 }
 
 MyVector::MyVector(size_t size, ValueType value, ResizeStrategy strategy, float coef):
-    _size(size), _capacity (size), _strategy (strategy), _coef (coef)
+    _data(nullptr), _size(size), _capacity (size), _strategy (strategy), _coef (coef)
 {
-    resize();
+    resizeVector(size, coef);
     for (size_t i = 0; i < _size; ++i) {
         _data[i] = value;
     }
@@ -128,18 +128,19 @@ void MyVector::checkLoadFactorAndCopy(size_t numToCopy) {
 
 void MyVector::checkLoadFactorAndResize() {
     if (loadFactor() > 1) {
-        resize();
+        if (_strategy == ResizeStrategy::Multiplicative) {
+            resizeVector(_size, _coef);
+        }
+        else if (_strategy == ResizeStrategy::Additive){
+            resizeVector(_size, _coef);
+        }
     }
     else if (loadFactor() <=  1/(_coef *_coef)) {
         if (_strategy == ResizeStrategy::Multiplicative) {
-            float coef = _coef;
-            _coef = 1 / _coef;
-            resize();
-            _coef = coef;
+            resizeVector(_capacity, 1 / _coef);
         }
         else if (_strategy == ResizeStrategy::Additive){
-            _capacity = _size;
-            resize();
+            resizeVector(_size, _coef);
         }
     }
 }
@@ -219,6 +220,8 @@ void MyVector::erase(const size_t idx, const size_t len) {
         throw std::length_error("MyVector is empty");
     else if (idx > _size - 1)
         throw std::length_error("Incorrect index");
+    else if (len + idx > _size)
+        throw std::length_error("Incorrect length");
 
     _size -= len;
     checkLoadFactorAndCopy(_size + len);
@@ -231,12 +234,12 @@ long long int MyVector::find(const ValueType &value, bool isBegin) const {
     if (isBegin) {
         for (size_t i = 0; i < _size; ++i)
             if (_data[i] == value)
-                return  _data[i];
+                return  i;
     }
     else {
         for (size_t i = _size - 1; i > 0; --i)
             if (_data[i] == value)
-                return  _data[i];
+                return  i;
     }
     return -1;
 }
@@ -252,14 +255,20 @@ void MyVector::reserve(const size_t capacity) {
 }
 
 void MyVector::resize(const size_t size, const ValueType value) {
+    if (_size == size)
+        return;
+
     MyVector bufVector(*this);
     _size = size;
 
-    checkLoadFactorAndCopy(_size);
     if (_size > bufVector._size) {
+        checkLoadFactorAndCopy(bufVector._size);
         for (size_t i = bufVector._size; i < _size; ++i)
             _data[i] = value;
     }
+    else
+        checkLoadFactorAndCopy(_size);
+
 }
 
 void MyVector::clear() {
