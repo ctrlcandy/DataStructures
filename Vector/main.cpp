@@ -189,5 +189,7 @@ int main() {
     std::cout << "Expected: " <<  2 << std::endl;
     std::cout << "Received: " << vectorSecond.find(0, false) << std::endl;
 
+    //MyVector::const_iterator it = vectorSecond.cend();
+
     return 0;
 }
