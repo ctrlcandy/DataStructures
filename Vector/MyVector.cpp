@@ -11,7 +11,7 @@ void MyVector::deleteData() {
     }
 }
 
-void MyVector::resize(bool copy) {
+void MyVector::resize() {
     deleteData();
 
     switch (_strategy) {
@@ -36,13 +36,13 @@ void MyVector::resize(bool copy) {
 MyVector::MyVector(size_t size, ResizeStrategy strategy, float coef):
     _size(size), _capacity (size), _strategy (strategy), _coef (coef)
 {
-    resize(false);
+    resize();
 }
 
 MyVector::MyVector(size_t size, ValueType value, ResizeStrategy strategy, float coef):
     _size(size), _capacity (size), _strategy (strategy), _coef (coef)
 {
-    resize(false);
+    resize();
     for (size_t i = 0; i < _size; ++i) {
         _data[i] = value;
     }
@@ -52,6 +52,7 @@ MyVector::MyVector(const MyVector &copy):
     _size(copy._size), _capacity (copy._capacity), _strategy (copy._strategy), _coef (copy._coef)
 {
     _data = new ValueType[_capacity];
+
     for (size_t i = 0; i < copy._capacity; ++i) {
         _data[i] = copy._data[i];
     }
@@ -115,30 +116,31 @@ float MyVector::loadFactor() {
     return (float)_size/_capacity;
 }
 
-void MyVector::checkLoadFactorStatus() {
-    bool checkChanges = false;
-    MyVector bufVector(*this);
+void MyVector::checkLoadFactorAndCopy(size_t numToCopy) {
+    if (loadFactor() > 1 || loadFactor() <=  1/(_coef *_coef)) {
+        MyVector bufVector(*this);
+        checkLoadFactorAndResize();
+        bufVector._size = numToCopy;
+        for (size_t i = 0; i < bufVector._size; ++i)
+            _data[i] = bufVector._data[i];
+    }
+}
 
+void MyVector::checkLoadFactorAndResize() {
     if (loadFactor() > 1) {
-        checkChanges = true;
-        resize(true);
+        resize();
     }
     else if (loadFactor() <=  1/(_coef *_coef)) {
-        checkChanges = true;
         if (_strategy == ResizeStrategy::Multiplicative) {
             float coef = _coef;
             _coef = 1 / _coef;
-            resize(true);
+            resize();
             _coef = coef;
         }
         else if (_strategy == ResizeStrategy::Additive){
             _capacity = _size;
-            resize(true);
+            resize();
         }
-    }
-    if (checkChanges) {
-        for (size_t i = 0; i < _size; ++i)
-            _data[i] = bufVector._data[i];
     }
 }
 
@@ -148,7 +150,7 @@ ValueType &MyVector::operator[](const size_t i) const {
 
 void MyVector::pushBack(const ValueType &value) {
     ++_size;
-    checkLoadFactorStatus();
+    checkLoadFactorAndCopy(_size - 1);
     _data[_size - 1] = value;
 }
 
@@ -161,7 +163,7 @@ void MyVector::insert(const size_t idx, const ValueType &value) {
     }
 
     ++_size;
-    checkLoadFactorStatus();
+    checkLoadFactorAndCopy(_size - 1);
 
     for (size_t i = _size - 1; i > idx; --i) {
         _data[i] = _data [i - 1];
@@ -178,7 +180,7 @@ void MyVector::insert(const size_t idx, const MyVector &value) {
     }
 
     _size += value._size;
-    checkLoadFactorStatus();
+    checkLoadFactorAndCopy(_size - value._size);
 
     for (size_t i = _size; i > idx; --i) {
         _data[i] = _data[i - value._size];
@@ -194,7 +196,7 @@ void MyVector::popBack() {
         throw std::length_error("MyVector is empty");
 
     --_size;
-    checkLoadFactorStatus();
+    checkLoadFactorAndCopy(_size);
 }
 
 void MyVector::erase(const size_t idx) {
@@ -206,7 +208,7 @@ void MyVector::erase(const size_t idx) {
         popBack();
 
     --_size;
-    checkLoadFactorStatus();
+    checkLoadFactorAndCopy(_size + 1);
 
     for (size_t i = idx; i < _size + 1; ++i)
         _data[i] = _data [i + 1];
@@ -219,9 +221,9 @@ void MyVector::erase(const size_t idx, const size_t len) {
         throw std::length_error("Incorrect index");
 
     _size -= len;
-    checkLoadFactorStatus();
+    checkLoadFactorAndCopy(_size + len);
 
-    for (size_t i = idx; i < _size + len; ++i) // короч оно не работает
+    for (size_t i = idx; i < _size + len; ++i)
         _data[i] = _data [i + len];
 }
 
@@ -253,7 +255,7 @@ void MyVector::resize(const size_t size, const ValueType value) {
     MyVector bufVector(*this);
     _size = size;
 
-    checkLoadFactorStatus();
+    checkLoadFactorAndCopy(_size);
     if (_size > bufVector._size) {
         for (size_t i = bufVector._size; i < _size; ++i)
             _data[i] = value;

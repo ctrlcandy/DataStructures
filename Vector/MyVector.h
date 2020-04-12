@@ -118,7 +118,8 @@ private:
     float _coef;
 
     void deleteData();
-	void resize(bool copy);
-    void checkLoadFactorStatus();
+	void resize();
+	void checkLoadFactorAndCopy(size_t numToCopy);
+    void checkLoadFactorAndResize();
 };
 
