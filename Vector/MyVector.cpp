@@ -120,8 +120,14 @@ void MyVector::checkLoadFactorAndCopy(size_t numToCopy) {
         MyVector bufVector(*this);
         checkLoadFactorAndResize();
 
-        for (size_t i = 0; i < numToCopy; ++i)
-            _data[i] = bufVector._data[i];
+        if (_capacity >= numToCopy) {
+            for (size_t i = 0; i < numToCopy; ++i)
+                _data[i] = bufVector._data[i];
+        }
+        else {
+            for (size_t i = 0; i < _size; ++i)
+                _data[i] = bufVector._data[i];
+        }
     }
 }
 
@@ -153,7 +159,7 @@ void MyVector::insert(const size_t idx, const ValueType &value) {
     if (idx > _size)
         throw std::length_error("Incorrect index");
     else if (idx == _size) {
-        popBack();
+        pushBack(value);
         return;
     }
 
@@ -170,7 +176,9 @@ void MyVector::insert(const size_t idx, const MyVector &value) {
     if (idx > _size)
         throw std::length_error("Incorrect index");
     else if (idx == _size) {
-        popBack();
+        for (size_t i = 0; i < value._size; ++i) {
+            pushBack(value._data[i]);
+        }
         return;
     }
 
@@ -217,10 +225,10 @@ void MyVector::erase(const size_t idx, const size_t len) {
         throw std::length_error("Incorrect length");
 
     _size -= len;
-    checkLoadFactorAndCopy(_size + len);
-
     for (size_t i = idx; i < _size + len; ++i)
         _data[i] = _data [i + len];
+
+    checkLoadFactorAndCopy(_size + len);
 }
 
 long long int MyVector::find(const ValueType &value, bool isBegin) const {
