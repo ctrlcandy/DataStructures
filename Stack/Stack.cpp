@@ -11,11 +11,11 @@ Stack::Stack(StackContainer container)
 	switch (container)
 	{
 	case StackContainer::List: {
-		_pimpl = new ListStack();	// конкретизируйте под ваши конструкторы, если надо
+		_pimpl = new ListStack();
 		break;
 	}
 	case StackContainer::Vector: {
-		_pimpl = new VectorStack();	// конкретизируйте под ваши конструкторы, если надо
+		_pimpl = new VectorStack();
 		break;
 	}
 	default:
@@ -23,19 +23,67 @@ Stack::Stack(StackContainer container)
 	}
 }
 
-Stack::Stack(const ValueType* valueArray, const size_t arraySize, StackContainer container)
-{
-	// принцип тот же, что и в прошлом конструкторе
+Stack::Stack(const ValueType* valueArray, const size_t arraySize, StackContainer container) : Stack(container) {
+    for(size_t i = 0; i < arraySize; i++) {
+        _pimpl->push(valueArray[i]);
+    }
 }
 
-Stack::Stack(const Stack& copyStack)
-{
-	// сами
+Stack::Stack(const Stack& copyStack) : Stack(copyStack._containerType) {
+    size_t size = copyStack._pimpl->size();
+    auto* arr = new ValueType[size];
+
+    for(size_t i = 0; i < size; i++) {
+        arr[i] = copyStack._pimpl->top();
+        copyStack._pimpl->pop();
+    }
+
+    for(size_t i = 0; i < size; i++) {
+        _pimpl->push(arr[i]);
+        copyStack._pimpl->push(arr[i]);
+    }
+
+    delete[] arr;
 }
 
-Stack& Stack::operator=(const Stack& copyStack)
-{
-	// TODO: вставьте здесь оператор return
+Stack& Stack::operator=(const Stack& copyStack) {
+    delete _pimpl;
+    _containerType = copyStack._containerType;
+
+    size_t size = copyStack._pimpl->size();
+    auto* arr = new ValueType[size];
+
+    for(size_t i = 0; i < size; i++) {
+        arr[i] = copyStack._pimpl->top();
+        copyStack._pimpl->pop();
+    }
+
+    for(size_t i = 0; i < size; i++) {
+        _pimpl->push(arr[i]);
+        copyStack._pimpl->push(arr[i]);
+    }
+
+    delete[] arr;
+
+    return *this;
+}
+
+Stack::Stack(Stack &&moveStack) noexcept {
+    delete _pimpl;
+    _pimpl = moveStack._pimpl;
+    _containerType = moveStack._containerType;
+
+    moveStack._pimpl = nullptr;
+}
+
+Stack &Stack::operator=(Stack &&moveStack) noexcept {
+    delete _pimpl;
+    _pimpl = moveStack._pimpl;
+    _containerType = moveStack._containerType;
+
+    moveStack._pimpl = nullptr;
+
+    return *this;
 }
 
 Stack::~Stack()
@@ -52,11 +100,6 @@ void Stack::push(const ValueType& value)
 void Stack::pop()
 {
 	_pimpl->pop();
-}
-
-ValueType& Stack::top()
-{
-	return _pimpl->top();
 }
 
 const ValueType& Stack::top() const
