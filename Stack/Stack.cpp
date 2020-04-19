@@ -125,5 +125,5 @@ bool Stack::isEmpty() const
 
 size_t Stack::size() const
 {
-	return _pimpl->isEmpty();
+	return _pimpl->size();
 }
