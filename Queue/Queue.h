@@ -12,6 +12,7 @@ using ValueType = double;
 enum class StackContainer {
 	Vector = 0,
 	List,
+	DoubleList,
 	// можно дополнять другими контейнерами
 };
 

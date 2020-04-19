@@ -1,6 +1,7 @@
 #include "Queue.h"
 #include "ListQueue.h"
 #include "VectorQueue.h"
+#include "DoubleListQueue.h"
 #include "QueueImplementation.h"
 
 #include <stdexcept>
@@ -17,6 +18,10 @@ Queue::Queue(StackContainer container)
 	case StackContainer::Vector: {
 		_pimpl = new VectorQueue();
 		break;
+	}
+	case StackContainer::DoubleList: {
+	    _pimpl = new DoubleListQueue();
+	    break;
 	}
 	default:
 		throw std::runtime_error("Неизвестный тип контейнера");
