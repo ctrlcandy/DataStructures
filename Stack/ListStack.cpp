@@ -1,5 +1,9 @@
 #include "ListStack.h"
 
+ListStack::ListStack() {};
+
+ListStack::ListStack(const ListStack& copyList) : LinkedList(copyList) {};
+
 void ListStack::push(const ValueType &value) {
     this->pushFront(value);
 }
@@ -13,7 +17,7 @@ const ValueType &ListStack::top() const {
 }
 
 bool ListStack::isEmpty() const {
-    return LinkedList::size();
+    return !LinkedList::size();
 }
 
 std::size_t ListStack::size() const {

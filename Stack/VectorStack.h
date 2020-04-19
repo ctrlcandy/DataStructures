@@ -7,8 +7,8 @@
 // множественное наследование можно заменить на композицию
 class VectorStack : public StackImplementation, public MyVector {
 public:
-    VectorStack() {};
-    VectorStack(const VectorStack& copyVector) : MyVector(copyVector) {};
+    VectorStack();
+    VectorStack(const VectorStack& copyVector);
 
     // добавление в хвост
     void push(const ValueType& value) override;

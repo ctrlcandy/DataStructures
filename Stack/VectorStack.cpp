@@ -1,5 +1,9 @@
 #include "VectorStack.h"
 
+VectorStack::VectorStack() {};
+
+VectorStack::VectorStack(const VectorStack& copyVector) : MyVector(copyVector) {};
+
 void VectorStack::push(const ValueType &value) {
     this->pushBack(value);
 }
