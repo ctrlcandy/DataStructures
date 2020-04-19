@@ -206,8 +206,10 @@ void MyVector::erase(const size_t idx) {
         throw std::length_error("MyVector is empty");
     else if (idx > _size - 1)
         throw std::length_error("Incorrect index");
-    else if (idx == _size - 1)
+    else if (idx == _size - 1) {
         popBack();
+        return;
+    }
 
     --_size;
     checkLoadFactorAndCopy(_size + 1);
