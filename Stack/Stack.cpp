@@ -33,17 +33,11 @@ Stack::Stack(const Stack& copyStack) : Stack(copyStack._containerType) {
     switch (_containerType)
     {
         case StackContainer::List: {
-            auto list(dynamic_cast<LinkedList*>(copyStack._pimpl));
-            for(size_t i = 0; i < list->size(); i++) {
-                _pimpl->push(list->operator[](i));
-            }
+            _pimpl = new ListStack(*(static_cast<ListStack*>(copyStack._pimpl)));
             break;
         }
         case StackContainer::Vector: {
-            auto vector(dynamic_cast<MyVector*>(copyStack._pimpl));
-            for(size_t i = 0; i < vector->size(); i++) {
-                _pimpl->push(vector->operator[](i));
-            }
+            _pimpl = new VectorStack(*(static_cast<VectorStack*>(copyStack._pimpl)));
             break;
         }
         default:
@@ -55,21 +49,17 @@ Stack& Stack::operator=(const Stack& copyStack) {
     if (this == &copyStack) {
         return *this;
     }
+    delete _pimpl;
+    _containerType = copyStack._containerType;
 
     switch (_containerType)
     {
         case StackContainer::List: {
-            auto list(dynamic_cast<LinkedList*>(copyStack._pimpl));
-            for(size_t i = 0; i < list->size(); i++) {
-                _pimpl->push(list->operator[](i));
-            }
+            _pimpl = new ListStack(*(static_cast<ListStack*>(copyStack._pimpl)));
             break;
         }
         case StackContainer::Vector: {
-            auto vector(dynamic_cast<MyVector*>(copyStack._pimpl));
-            for(size_t i = 0; i < vector->size(); i++) {
-                _pimpl->push(vector->operator[](i));
-            }
+            _pimpl = new VectorStack(*(static_cast<VectorStack*>(copyStack._pimpl)));
             break;
         }
         default:

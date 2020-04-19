@@ -10,6 +10,7 @@ class ListStack : public StackImplementation, public LinkedList
 {
 public:
     ListStack() {};
+    ListStack(const ListStack& copyList);
 
     // добавление в хвост
     void push(const ValueType& value) override;
