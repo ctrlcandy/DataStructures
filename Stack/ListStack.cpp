@@ -1,15 +1,15 @@
 #include "ListStack.h"
 
 void ListStack::push(const ValueType &value) {
-    this->pushBack(value);
+    this->pushFront(value);
 }
 
 void ListStack::pop() {
-    this->removeBack();
+    this->removeFront();
 }
 
 const ValueType &ListStack::top() const {
-    return (*this)[LinkedList::size() - 1];
+    return (*this)[0];
 }
 
 bool ListStack::isEmpty() const {
