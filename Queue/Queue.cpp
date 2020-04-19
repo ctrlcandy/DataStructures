@@ -35,20 +35,17 @@ Queue::Queue(const ValueType* valueArray, const size_t arraySize, QueueContainer
 }
 
 Queue::Queue(const Queue& copyQueue) : Queue(copyQueue._containerType) {
-    switch (_containerType)
-    {
+    switch (_containerType) {
         case QueueContainer::List: {
-            auto list(dynamic_cast<LinkedList*>(copyQueue._pimpl));
-            for(size_t i = 0; i < list->size(); i++) {
-                _pimpl->enqueue(list->operator[](i));
-            }
+            _pimpl = new ListQueue(*(static_cast<ListQueue *>(copyQueue._pimpl)));
             break;
         }
         case QueueContainer::Vector: {
-            auto vector(dynamic_cast<MyVector*>(copyQueue._pimpl));
-            for(size_t i = 0; i < vector->size(); i++) {
-                _pimpl->enqueue(vector->operator[](i));
-            }
+            _pimpl = new VectorQueue(*(static_cast<VectorQueue *>(copyQueue._pimpl)));
+            break;
+        }
+        case QueueContainer::DoubleList: {
+            _pimpl = new DoubleListQueue(*(static_cast<DoubleListQueue *>(copyQueue._pimpl)));
             break;
         }
         default:
@@ -64,20 +61,18 @@ Queue& Queue::operator=(const Queue& copyQueue) {
     delete _pimpl;
     _containerType = copyQueue._containerType;
 
-    switch (_containerType)
-    {
+
+    switch (_containerType) {
         case QueueContainer::List: {
-            auto list(dynamic_cast<LinkedList*>(copyQueue._pimpl));
-            for(size_t i = 0; i < list->size(); i++) {
-                _pimpl->enqueue(list->operator[](i));
-            }
+            _pimpl = new ListQueue(*(static_cast<ListQueue *>(copyQueue._pimpl)));
             break;
         }
         case QueueContainer::Vector: {
-            auto vector(dynamic_cast<MyVector*>(copyQueue._pimpl));
-            for(size_t i = 0; i < vector->size(); i++) {
-                _pimpl->enqueue(vector->operator[](i));
-            }
+            _pimpl = new VectorQueue(*(static_cast<VectorQueue *>(copyQueue._pimpl)));
+            break;
+        }
+        case QueueContainer::DoubleList: {
+            _pimpl = new DoubleListQueue(*(static_cast<DoubleListQueue *>(copyQueue._pimpl)));
             break;
         }
         default:

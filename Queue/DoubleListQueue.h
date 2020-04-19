@@ -1,16 +1,16 @@
 #pragma once
 
 #include "QueueImplementation.h"
-#include "LinkedList.h"// меняете на include вашего листа
+#include "DoubleLinkedList.h"// меняете на include вашего листа
 
 // вариант с использованием ранее написанного списка и множественного наследования
 // если бы список не был реализован, то было бы наследование только от интерфейса
 // множественное наследование можно заменить на композицию
-class ListQueue : public QueueImplementation, public LinkedList
+class DoubleListQueue : public QueueImplementation, public DoubleLinkedList
 {
 public:
-    ListQueue() {};
-    ListQueue(const ListQueue& copyList);
+    DoubleListQueue() {};
+    DoubleListQueue(const DoubleListQueue& copyList);
 
     // добавление в хвост
     void enqueue(const ValueType& value) override;
@@ -28,6 +28,5 @@ public:
     std::size_t size() const override;
 
     // виртуальный деструктор
-    ~ListQueue() override {};
+    ~DoubleListQueue() override {};
 };
-

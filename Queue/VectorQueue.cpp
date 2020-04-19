@@ -1,5 +1,11 @@
 #include "VectorQueue.h"
 
+VectorQueue::VectorQueue(const VectorQueue &copyVector) : VectorQueue() {
+    for (size_t i = 0; i < copyVector.size(); ++i) {
+        this->pushBack(copyVector[i]);
+    }
+}
+
 void VectorQueue::enqueue(const ValueType &value) {
     this->pushBack(value);
 }
@@ -24,7 +30,7 @@ const ValueType &VectorQueue::front() const {
 }
 
 bool VectorQueue::isEmpty() const {
-    return !MyVector::size();
+    return MyVector::size();
 }
 
 std::size_t VectorQueue::size() const {
