@@ -7,7 +7,7 @@ void VectorQueue::enqueue(const ValueType &value) {
 void VectorQueue::dequeue() {
     _backIndex++;
 
-    if ((float)_backIndex/this->size() >= 0.5) { // может, тут нужно формулу поменять, но смысл примерно такой
+    if ((float(size() - _backIndex) / capacity() <=  1/(_queueCoef * _queueCoef))) {
         MyVector bufVector(*this);
         this->clear();
         for (size_t i = _backIndex; i < bufVector.size(); i++) {

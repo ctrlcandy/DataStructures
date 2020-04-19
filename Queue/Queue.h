@@ -2,35 +2,37 @@
 // Уровень абстракции
 // клиентский код подключает именно этот хедер
 
-// тип значений в стеке
 #include <cstddef>
-#include "QueueImplementation.h"
 
+// тип значений в стеке
 using ValueType = double;
 
 // на основе какого контейнера работает стек
-enum class StackContainer {
-	Vector = 0,
-	List,
-	DoubleList,
-	// можно дополнять другими контейнерами
+enum class QueueContainer {
+    Vector = 0,
+    List,
+    DoubleList,
+    // можно дополнять другими контейнерами
 };
+
+// декларация класса с реализацией
+class QueueImplementation;
 
 class Queue
 {
 public:
 	// Большая пятерка
-	Queue(StackContainer container = StackContainer::Vector);
+	Queue(QueueContainer container = QueueContainer::Vector);
 	// элементы массива последовательно подкладываются в стек
 	Queue(const ValueType* valueArray, std::size_t arraySize,
-          StackContainer container = StackContainer::Vector);
+          QueueContainer container = QueueContainer::Vector);
 
-	Queue(const Queue& copyStack);
-	Queue& operator=(const Queue& copyStack);
+	Queue(const Queue& copyQueue);
+	Queue& operator=(const Queue& copyQueue);
 
 	// Здесь как обычно
-	Queue(Queue&& moveStack) noexcept;
-	Queue& operator=(Queue&& moveStack) noexcept;
+	Queue(Queue&& moveQueue) noexcept;
+	Queue& operator=(Queue&& moveQueue) noexcept;
 
 	~Queue();
 
@@ -48,6 +50,6 @@ private:
 	// указатель на имплементацию (уровень реализации)
 	QueueImplementation* _pimpl = nullptr;
 	// тип контейнера, наверняка понадобится
-	StackContainer _containerType;
+    QueueContainer _containerType;
 };
 
