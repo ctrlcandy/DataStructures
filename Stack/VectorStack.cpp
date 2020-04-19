@@ -13,7 +13,7 @@ const ValueType &VectorStack::top() const {
 }
 
 bool VectorStack::isEmpty() const {
-    return MyVector::size();
+    return !MyVector::size();
 }
 
 std::size_t VectorStack::size() const {

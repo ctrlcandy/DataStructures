@@ -13,7 +13,7 @@ const ValueType &ListQueue::front() const {
 }
 
 bool ListQueue::isEmpty() const {
-    return LinkedList::size();
+    return !LinkedList::size();
 }
 
 std::size_t ListQueue::size() const {

@@ -24,7 +24,7 @@ const ValueType &VectorQueue::front() const {
 }
 
 bool VectorQueue::isEmpty() const {
-    return MyVector::size();
+    return !MyVector::size();
 }
 
 std::size_t VectorQueue::size() const {
