@@ -2,18 +2,20 @@
 // Уровень абстракции
 // клиентский код подключает именно этот хедер
 
-// тип значений в стеке
 #include <cstddef>
-#include "StackImplementation.h"
 
+// тип значений в стеке
 using ValueType = double;
 
 // на основе какого контейнера работает стек
 enum class StackContainer {
-	Vector = 0,
-	List,
-	// можно дополнять другими контейнерами
+    Vector = 0,
+    List,
+    // можно дополнять другими контейнерами
 };
+
+// декларация класса с реализацией
+class StackImplementation;
 
 class Stack
 {
