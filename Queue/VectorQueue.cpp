@@ -1,11 +1,5 @@
 #include "VectorQueue.h"
 
-VectorQueue::VectorQueue(const VectorQueue &copyVector) : VectorQueue() {
-    for (size_t i = 0; i < copyVector.size(); ++i) {
-        this->pushBack(copyVector[i]);
-    }
-}
-
 void VectorQueue::enqueue(const ValueType &value) {
     this->pushBack(value);
 }

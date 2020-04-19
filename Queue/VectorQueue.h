@@ -9,7 +9,7 @@
 class VectorQueue : public QueueImplementation, public MyVector {
 public:
     VectorQueue() : _backIndex(0), _queueCoef(1.5f) {};
-    VectorQueue(const VectorQueue& copyVector);
+    VectorQueue(const VectorQueue& copyVector) : MyVector(copyVector) {};
 
     // добавление в хвост
     void enqueue(const ValueType& value) override;

@@ -1,11 +1,5 @@
 #include "DoubleListQueue.h"
 
-DoubleListQueue::DoubleListQueue(const DoubleListQueue &copyList) {
-    for (size_t i = 0; i < copyList.size(); ++i) {
-        this->pushBack(copyList[i]);
-    }
-}
-
 void DoubleListQueue::enqueue(const ValueType &value) {
     this->pushBack(value);
 }

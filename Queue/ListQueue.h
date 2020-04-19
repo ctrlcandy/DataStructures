@@ -10,7 +10,7 @@ class ListQueue : public QueueImplementation, public LinkedList
 {
 public:
     ListQueue() {};
-    ListQueue(const ListQueue& copyList);
+    ListQueue(const ListQueue& copyList) : LinkedList(copyList) {};
 
     // добавление в хвост
     void enqueue(const ValueType& value) override;

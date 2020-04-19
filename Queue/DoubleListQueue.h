@@ -10,7 +10,7 @@ class DoubleListQueue : public QueueImplementation, public DoubleLinkedList
 {
 public:
     DoubleListQueue() {};
-    DoubleListQueue(const DoubleListQueue& copyList);
+    DoubleListQueue(const DoubleListQueue& copyList): DoubleLinkedList(copyList) {};
 
     // добавление в хвост
     void enqueue(const ValueType& value) override;
