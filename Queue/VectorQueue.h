@@ -8,8 +8,8 @@
 // множественное наследование можно заменить на композицию
 class VectorQueue : public QueueImplementation, public MyVector {
 public:
-    VectorQueue() : _backIndex(0), _queueCoef(1.5f) {};
-    VectorQueue(const VectorQueue& copyVector) : MyVector(copyVector) {};
+    VectorQueue();
+    VectorQueue(const VectorQueue& copyVector);
 
     // добавление в хвост
     void enqueue(const ValueType& value) override;

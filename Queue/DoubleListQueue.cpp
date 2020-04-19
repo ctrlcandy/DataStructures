@@ -1,5 +1,9 @@
 #include "DoubleListQueue.h"
 
+DoubleListQueue::DoubleListQueue() {};
+
+DoubleListQueue::DoubleListQueue(const DoubleListQueue& copyList): DoubleLinkedList(copyList) {};
+
 void DoubleListQueue::enqueue(const ValueType &value) {
     this->pushBack(value);
 }
@@ -13,7 +17,7 @@ const ValueType& DoubleListQueue::front() const {
 }
 
 bool DoubleListQueue::isEmpty() const {
-    return DoubleLinkedList::size();
+    return !DoubleLinkedList::size();
 }
 
 std::size_t DoubleListQueue::size() const {

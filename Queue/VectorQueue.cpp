@@ -1,4 +1,8 @@
+#include <stdexcept>
 #include "VectorQueue.h"
+
+VectorQueue::VectorQueue() : _backIndex(0), _queueCoef(1.5f) {};
+VectorQueue::VectorQueue(const VectorQueue& copyVector) : MyVector(copyVector) {};
 
 void VectorQueue::enqueue(const ValueType &value) {
     this->pushBack(value);
@@ -6,6 +10,9 @@ void VectorQueue::enqueue(const ValueType &value) {
 
 void VectorQueue::dequeue() {
     _backIndex++;
+    if (_backIndex == size()) {
+        throw std::length_error("Incorrect operation");
+    }
 
     if ((float(size() - _backIndex) / capacity() <=  1/(_queueCoef * _queueCoef))) {
         MyVector bufVector(*this);
@@ -20,11 +27,14 @@ void VectorQueue::dequeue() {
 }
 
 const ValueType &VectorQueue::front() const {
+    if (_backIndex == size()) {
+        throw std::length_error("Incorrect operation");
+    }
     return (*this)[_backIndex];
 }
 
 bool VectorQueue::isEmpty() const {
-    return MyVector::size();
+    return !MyVector::size();
 }
 
 std::size_t VectorQueue::size() const {
