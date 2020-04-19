@@ -8,7 +8,7 @@
 class VectorStack : public StackImplementation, public MyVector {
 public:
     VectorStack() {};
-    VectorStack(const VectorStack& copyVector);
+    VectorStack(const VectorStack& copyVector) : MyVector(copyVector) {};
 
     // добавление в хвост
     void push(const ValueType& value) override;
