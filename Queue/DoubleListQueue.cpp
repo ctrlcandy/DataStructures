@@ -13,9 +13,9 @@ const ValueType& DoubleListQueue::front() const {
 }
 
 bool DoubleListQueue::isEmpty() const {
-    return DoubleListQueue::size();
+    return DoubleLinkedList::size();
 }
 
 std::size_t DoubleListQueue::size() const {
-    return DoubleListQueue::size();
+    return DoubleLinkedList:size();
 }
