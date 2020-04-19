@@ -9,10 +9,10 @@ void VectorQueue::enqueue(const ValueType &value) {
 }
 
 void VectorQueue::dequeue() {
-    _backIndex++;
     if (_backIndex == size()) {
         throw std::length_error("Incorrect operation");
     }
+    _backIndex++;
 
     if ((float(size() - _backIndex) / capacity() <=  1/(_queueCoef * _queueCoef))) {
         MyVector bufVector(*this);
