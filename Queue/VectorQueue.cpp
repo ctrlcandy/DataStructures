@@ -5,11 +5,22 @@ void VectorQueue::enqueue(const ValueType &value) {
 }
 
 void VectorQueue::dequeue() {
-    this->erase(0);
+    _backIndex++;
+
+    if ((float)_backIndex/this->size() >= 0.5) { // может, тут нужно формулу поменять, но смысл примерно такой
+        MyVector bufVector(*this);
+        this->clear();
+        for (size_t i = _backIndex; i < bufVector.size(); i++) {
+            this->pushBack(bufVector[i]);
+        }
+        _backIndex = 0;
+    }
+
+    //this->erase(0); - вариант проще
 }
 
 const ValueType &VectorQueue::front() const {
-    return (*this)[0];
+    return (*this)[_backIndex];
 }
 
 bool VectorQueue::isEmpty() const {
