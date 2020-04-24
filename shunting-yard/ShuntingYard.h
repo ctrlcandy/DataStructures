@@ -6,7 +6,6 @@
 #include <vector>
 #include "MyVector/MyVector.h"
 #include "Queue/Queue.h"
-#include "Tokens/AbstractToken.h"
 
 class ShuntingYard {
 public:
@@ -14,31 +13,30 @@ public:
 
     //Токенизация, возвращается вектор указателей на абстрактный токен
     //(необходимо в исходнике вектора поменять ValueType = double на AbstractToken)
-    std::vector<AbstractToken> tokenize(const char* expression);
+    MyVector tokenize(const char* expression);
 
     //Очередь указателей на абстрактный токен
-    static Queue shuntingYard(std::vector<AbstractToken>& tokens);
+    static Queue shuntingYard(MyVector& tokens);
 
     double calc(Queue& tokenQueue);
 
     ~ShuntingYard() {};
 
 private:
-    static bool checkPriority(const AbstractToken& bottom, const AbstractToken& top) {
-        if (strcmp(bottom.value(), "-") == 0 || strcmp(bottom.value(), "+") == 0) {
-            if (strcmp(top.value(), "*") == 0 || strcmp(top.value(), "/") == 0 ||
-                strcmp(top.value(), "^") == 0)
+    static bool checkPriority(const Token& bottom, const Token& top) {
+        if (bottom.value() == "-" || bottom.value() == "+") {
+            if (top.value() == "*" || top.value() == "/" || top.value() == "^")
                 return true;
         }
-        else if (strcmp(bottom.value(), "*") == 0 || strcmp(bottom.value(), "/") == 0) {
-            if (strcmp(top.value(), "^") == 0)
+        else if (bottom.value() == "*" || bottom.value() == "/") {
+            if (top.value() == "^")
                 return true;
         }
 
         return false;
     };
 
-    static double calcFunc(const char* oper, const AbstractToken& bottom, const AbstractToken& top) {
+    /*static double calcFunc(const char* oper, const AbstractToken& bottom, const AbstractToken& top) {
         if (strcmp(oper, "-") == 0 ) {
             return std::stoi(bottom.value()) - std::stoi(top.value());
         }
@@ -54,7 +52,7 @@ private:
        else if (strcmp(oper, "^") == 0 ) {
             return std::pow(std::stoi(bottom.value()), std::stoi(top.value()));
        }
-    }
+    }*/
 };
 
 

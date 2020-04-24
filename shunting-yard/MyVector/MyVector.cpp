@@ -266,9 +266,6 @@ void MyVector::resize(const size_t size, const ValueType value) {
 }
 
 void MyVector::clear() {
-    for (size_t i = 0; i < _size; ++i)
-        _data[i] = 0;
-
     _size = 0;
 }
 

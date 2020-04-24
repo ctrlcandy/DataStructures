@@ -4,9 +4,9 @@
 // наглядная демонстрация того, почему с шаблонами было бы легче.
 // Ждем, когда дойдете до этого на МиСП.
 #include <cstddef>
-#include "../Tokens/AbstractToken.h"
+#include "../Tokens/Token.h"
 
-using ValueType = AbstractToken;
+using ValueType = Token;
 
 // интерфейс для конкретных реализаций контейнера для стека
 class QueueImplementation {

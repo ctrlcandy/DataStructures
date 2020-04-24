@@ -3,10 +3,10 @@
 // клиентский код подключает именно этот хедер
 
 #include <cstddef>
-#include "../Tokens/AbstractToken.h"
+#include "../Tokens/Token.h"
 
 // тип значений в стеке
-using ValueType = AbstractToken;
+using ValueType = Token;
 
 // на основе какого контейнера работает стек
 enum class QueueContainer {

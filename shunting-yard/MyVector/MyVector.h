@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstddef>
-#include "../Tokens/AbstractToken.h"
+#include "../Tokens/Token.h"
 
 // стратегия изменения capacity
 enum class ResizeStrategy {
@@ -16,7 +16,7 @@ enum class SortedStrategy {
 
 // тип значений в векторе
 // потом будет заменен на шаблон
-using ValueType = AbstractToken;
+using ValueType = Token;
 
 class MyVector
 {
