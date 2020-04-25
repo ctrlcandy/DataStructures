@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstring>
 #include <vector>
+#include <iostream>
 #include "MyVector/MyVector.h"
 #include "Queue/Queue.h"
 
@@ -12,48 +13,46 @@ public:
     ShuntingYard() {};
 
     //Токенизация, возвращается вектор указателей на абстрактный токен
-    //(необходимо в исходнике вектора поменять ValueType = double на AbstractToken)
-    MyVector tokenize(const char* expression);
+    //(необходимо в исходнике вектора поменять ValueType = double на Token)
+    MyVector tokenize(const char *expression);
 
     //Очередь указателей на абстрактный токен
-    static Queue shuntingYard(MyVector& tokens);
+    static Queue shuntingYard(MyVector &tokens);
 
-    double calc(Queue& tokenQueue);
+    double calc(Queue &tokenQueue);
 
     ~ShuntingYard() {};
 
 private:
-    static bool checkPriority(const Token& bottom, const Token& top) {
-        if (bottom.value() == "-" || bottom.value() == "+") {
-            if (top.value() == "*" || top.value() == "/" || top.value() == "^")
+    static bool checkPriority(const Token &bottom, const Token &top) {
+        if (top.value() == "-" || top.value() == "+") {
+            if (bottom.value() == "*" || bottom.value() == "/" || bottom.value() == "^")
+                return true;
+        } else if (top.value() == "*" || top.value() == "/") {
+            if (bottom.value() == "^")
                 return true;
         }
-        else if (bottom.value() == "*" || bottom.value() == "/") {
-            if (top.value() == "^")
-                return true;
-        }
-
         return false;
     };
 
-    /*static double calcFunc(const char* oper, const AbstractToken& bottom, const AbstractToken& top) {
-        if (strcmp(oper, "-") == 0 ) {
-            return std::stoi(bottom.value()) - std::stoi(top.value());
+    static std::string calcFunc(const Token &bottom, const Token &oper, const Token &top) {
+        if (oper.value() == "-") {
+            return std::to_string(std::stod(bottom.value()) - std::stod(top.value()));
         }
-       else if (strcmp(oper, "+") == 0 ) {
-            return std::stoi(bottom.value()) + std::stoi(top.value());
-       }
-       else if (strcmp(oper, "*") == 0 ) {
-            return std::stoi(bottom.value()) * std::stoi(top.value());
-       }
-       else if (strcmp(oper, "/") == 0 ) {
-            return std::stoi(bottom.value()) / std::stoi(top.value());
-       }
-       else if (strcmp(oper, "^") == 0 ) {
-            return std::pow(std::stoi(bottom.value()), std::stoi(top.value()));
-       }
-    }*/
+        else if (oper.value() == "+") {
+            return std::to_string(std::stod(bottom.value()) + std::stod(top.value()));
+        }
+        else if (oper.value() == "*") {
+            return std::to_string(std::stod(bottom.value()) * std::stod(top.value()));
+        }
+        else if (oper.value() == "/") {
+            return std::to_string(std::stod(bottom.value()) / std::stod(top.value()));
+        }
+        else if (oper.value() == "^") {
+            return std::to_string(std::pow(std::stod(bottom.value()), std::stod(top.value())));
+        }
+        else throw std::invalid_argument("Incorrect Token");
+    };
 };
-
 
 #endif //SHUNTINGYARD_H

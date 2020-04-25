@@ -16,6 +16,11 @@ public:
     Token() : _type(Type::None), _value("\0") {};
     Token(Type type, std::string value) : _type(type), _value(value) {};
 
+    //Нужно для вектора
+    bool operator==(const Token& token) {
+        return this->type() == token.type() && this->value() == token.value();
+    }
+
     Type type() const { return _type; };
 
     std::string value() const { return _value; };

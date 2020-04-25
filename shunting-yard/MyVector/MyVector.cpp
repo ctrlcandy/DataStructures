@@ -224,7 +224,7 @@ void MyVector::erase(const size_t idx, const size_t len) {
     checkLoadFactorAndCopy(_size + len);
 }
 
-/*long long int MyVector::find(const ValueType &value, bool isBegin) const {
+long long int MyVector::find(const ValueType &value, bool isBegin) const {
     if (isBegin) {
         for (size_t i = 0; i < _size; ++i)
             if (_data[i] == value)
@@ -236,7 +236,7 @@ void MyVector::erase(const size_t idx, const size_t len) {
                 return  i;
     }
     return -1;
-}*/
+}
 
 void MyVector::reserve(const size_t capacity) {
     MyVector bufVector(*this);
