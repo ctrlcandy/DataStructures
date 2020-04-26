@@ -21,6 +21,11 @@ MyVector ShuntingYard::tokenize(const char* expression) {
                 break;
             case (')'):
                 if (!bufNum.empty() && bufNum != "-") {
+                    if (result.size() > 2 && result[result.size() - 2].value() == "(" &&
+                        result[result.size() - 1].value() == "-") {
+                        bufNum.insert( 0, 1,'-');
+                        result.popBack();
+                    }
                     result.pushBack(Token(Token::Type::Number, bufNum));
                     bufNum.clear();
                 }
