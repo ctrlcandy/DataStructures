@@ -53,9 +53,17 @@ MyVector ShuntingYard::tokenize(const char* expression) {
             case ('7'):
             case ('8'):
             case ('9'):
-            case (','): // Если поставить русскую локаль зачем-то
-            case ('.'):
                 bufNum += expression[i];
+                break;
+            case (','): // Если поставить русскую локаль зачем-то
+                if (bufNum.find(',') == std::string::npos)
+                    bufNum += expression[i];
+                else throw std::invalid_argument("More than one ,");
+                break;
+            case ('.'):
+                if (bufNum.find('.') == std::string::npos)
+                bufNum += expression[i];
+                else throw std::invalid_argument("More than one .");
                 break;
             case (' '):
                 continue;
