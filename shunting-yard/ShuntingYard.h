@@ -15,9 +15,8 @@ public:
     static MyVector tokenize(const char* expression);
 
     //Очередь указателей на абстрактный токен
-    //Представляет собой выражение в постфиксной записи, которую чаще называют обратной польской нотацией
-    //RPN - Reverse Polish notation
-    static Queue toRPN(MyVector& tokens);
+    //Представляет собой выражение в постфиксной записи
+    static Queue shuntingYard(MyVector& tokens);
 
     static double calculate(Queue& tokenQueue);
 

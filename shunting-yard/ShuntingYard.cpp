@@ -78,7 +78,7 @@ MyVector ShuntingYard::tokenize(const char* expression) {
     return result;
 }
 
-Queue ShuntingYard::toRPN(MyVector& tokens) {
+Queue ShuntingYard::shuntingYard(MyVector& tokens) {
     Stack stack;
     Queue queue;
     size_t size = tokens.size();
@@ -152,6 +152,6 @@ double ShuntingYard::calculate(Queue& tokenQueue) {
 
 double ShuntingYard::calculate(const char* expression) {
     MyVector tokens = ShuntingYard::tokenize(expression);
-    Queue tokenQueue = ShuntingYard::toRPN(tokens);
+    Queue tokenQueue = ShuntingYard::shuntingYard(tokens);
     return ShuntingYard::calculate(tokenQueue);
 }
