@@ -2,8 +2,6 @@
 #include <stdexcept>
 #include "ShuntingYard.h"
 #include "Stack/Stack.h"
-#include "Queue/Queue.h"
-
 
 MyVector ShuntingYard::tokenize(const char* expression) {
     size_t len = strlen(expression);
@@ -72,7 +70,7 @@ MyVector ShuntingYard::tokenize(const char* expression) {
     return result;
 }
 
-Queue ShuntingYard::shuntingYard(MyVector& tokens) {
+Queue ShuntingYard::toRPN(MyVector& tokens) {
     Stack stack;
     Queue queue;
     size_t size = tokens.size();
@@ -80,8 +78,7 @@ Queue ShuntingYard::shuntingYard(MyVector& tokens) {
     for (size_t i = 0; i < size; ++i) {
         switch (tokens[i].type()) {
             case (Token::Type::Operator) :
-                while (tokens[i].type() == Token::Type::Operator &&
-                       ShuntingYard::checkPriority(stack.top(), tokens[i])) {
+                while (stack.size() != 0 && ShuntingYard::checkPriority(stack.top(), tokens[i])) {
                     queue.enqueue(stack.top());
                     stack.pop();
                 }
@@ -99,7 +96,7 @@ Queue ShuntingYard::shuntingYard(MyVector& tokens) {
                     stack.pop();
 
                     if (stack.isEmpty()) {
-                        throw std::invalid_argument("Incorrect ParenthesesToken");
+                       throw std::invalid_argument("Incorrect ParenthesesToken");
                     }
                 }
                 stack.pop();
@@ -121,7 +118,7 @@ Queue ShuntingYard::shuntingYard(MyVector& tokens) {
     return queue;
 }
 
-double ShuntingYard::calc(Queue& tokenQueue) {
+double ShuntingYard::calculate(Queue& tokenQueue) {
     Stack stack;
     double res = 0;
     size_t size = tokenQueue.size();
@@ -132,15 +129,21 @@ double ShuntingYard::calc(Queue& tokenQueue) {
             stack.pop();
             Token bottom(stack.top());
             stack.pop();
-            Token res(Token::Type::Number, ShuntingYard::calcFunc(bottom, tokenQueue.front(), top));
+            Token result(Token::Type::Number, ShuntingYard::calcFunc(bottom, tokenQueue.front(), top));
+            stack.push(result);
             tokenQueue.dequeue();
-            stack.push(res);
         } else if (tokenQueue.front().type() == Token::Type::Number) {
             stack.push(tokenQueue.front());
             tokenQueue.dequeue();
-        } else throw std::invalid_argument("Incorrect ParenthesesToken");
+        } else throw std::invalid_argument("Incorrect Token");
     }
     res = std::stod(stack.top().value());
 
     return res;
+}
+
+double ShuntingYard::calculate(const char* expression) {
+    MyVector tokens = ShuntingYard::tokenize(expression);
+    Queue tokenQueue = ShuntingYard::toRPN(tokens);
+    return ShuntingYard::calculate(tokenQueue);
 }

@@ -21,9 +21,9 @@ public:
         return this->type() == token.type() && this->value() == token.value();
     }
 
-    Type type() const { return _type; };
+    const Type& type() const { return _type; };
 
-    std::string value() const { return _value; };
+    const std::string& value() const { return _value; };
 
     ~Token() {};
 

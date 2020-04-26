@@ -3,8 +3,6 @@
 
 #include <cmath>
 #include <cstring>
-#include <vector>
-#include <iostream>
 #include "MyVector/MyVector.h"
 #include "Queue/Queue.h"
 
@@ -14,23 +12,28 @@ public:
 
     //Токенизация, возвращается вектор указателей на абстрактный токен
     //(необходимо в исходнике вектора поменять ValueType = double на Token)
-    MyVector tokenize(const char *expression);
+    static MyVector tokenize(const char* expression);
 
     //Очередь указателей на абстрактный токен
-    static Queue shuntingYard(MyVector &tokens);
+    //Представляет собой выражение в постфиксной записи, которую чаще называют обратной польской нотацией
+    //RPN - Reverse Polish notation
+    static Queue toRPN(MyVector& tokens);
 
-    double calc(Queue &tokenQueue);
+    static double calculate(Queue& tokenQueue);
+
+    static double calculate (const char* expression);
 
     ~ShuntingYard() {};
 
 private:
     static bool checkPriority(const Token &bottom, const Token &top) {
-        if (top.value() == "-" || top.value() == "+") {
-            if (bottom.value() == "*" || bottom.value() == "/" || bottom.value() == "^")
+        if (bottom.type() == Token::Type::Operator) {
+            if (top.value() == "-" || top.value() == "+") {
                 return true;
-        } else if (top.value() == "*" || top.value() == "/") {
-            if (bottom.value() == "^")
-                return true;
+            } else if (top.value() == "*" || top.value() == "/") {
+                if (bottom.value() != "-" && bottom.value() != "+")
+                    return true;
+            }
         }
         return false;
     };
