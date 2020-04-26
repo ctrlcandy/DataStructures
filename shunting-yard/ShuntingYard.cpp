@@ -21,6 +21,11 @@ MyVector ShuntingYard::tokenize(const char* expression) {
                 break;
             case (')'):
                 if (!bufNum.empty() && bufNum != "-") {
+                    if (result.size() > 2 && result[result.size() - 2].value() == "(" &&
+                        result[result.size() - 1].value() == "-") {
+                        bufNum.insert( 0, 1,'-');
+                        result.popBack();
+                    }
                     result.pushBack(Token(Token::Type::Number, bufNum));
                     bufNum.clear();
                 }
@@ -53,9 +58,17 @@ MyVector ShuntingYard::tokenize(const char* expression) {
             case ('7'):
             case ('8'):
             case ('9'):
-            case (','): // Если поставить русскую локаль зачем-то
-            case ('.'):
                 bufNum += expression[i];
+                break;
+            case (','): // Если поставить русскую локаль зачем-то
+                if (bufNum.find(',') == std::string::npos)
+                    bufNum += expression[i];
+                else throw std::invalid_argument("More than one ,");
+                break;
+            case ('.'):
+                if (bufNum.find('.') == std::string::npos)
+                bufNum += expression[i];
+                else throw std::invalid_argument("More than one .");
                 break;
             case (' '):
                 continue;
@@ -70,7 +83,7 @@ MyVector ShuntingYard::tokenize(const char* expression) {
     return result;
 }
 
-Queue ShuntingYard::toRPN(MyVector& tokens) {
+Queue ShuntingYard::shuntingYard(MyVector& tokens) {
     Stack stack;
     Queue queue;
     size_t size = tokens.size();
@@ -144,6 +157,6 @@ double ShuntingYard::calculate(Queue& tokenQueue) {
 
 double ShuntingYard::calculate(const char* expression) {
     MyVector tokens = ShuntingYard::tokenize(expression);
-    Queue tokenQueue = ShuntingYard::toRPN(tokens);
+    Queue tokenQueue = ShuntingYard::shuntingYard(tokens);
     return ShuntingYard::calculate(tokenQueue);
 }
