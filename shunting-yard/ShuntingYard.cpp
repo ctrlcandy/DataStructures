@@ -12,8 +12,14 @@ MyVector ShuntingYard::tokenize(const char* expression) {
     for (size_t i = 0; i < len; i++) {
         switch (expression[i]) {
             case ('('):
-                if (!bufNum.empty() && bufNum != "-") {
-                    result.pushBack(Token(Token::Type::Number, bufNum));
+                if (!bufNum.empty()) {
+                    if (bufNum != "-") {
+                        result.pushBack(Token(Token::Type::Number, bufNum));
+                    }
+                    else {
+                        result.pushBack(Token(Token::Type::Number, "-1"));
+                        result.pushBack(Token(Token::Type::Operator,"*"));
+                    }
                     bufNum.clear();
                 }
                 bufChar = expression[i];
@@ -21,9 +27,9 @@ MyVector ShuntingYard::tokenize(const char* expression) {
                 break;
             case (')'):
                 if (!bufNum.empty() && bufNum != "-") {
-                    if (result.size() > 2 && result[result.size() - 2].value() == "(" &&
+                    if (result.size() > 1 && result[result.size() - 2].value() == "(" &&
                         result[result.size() - 1].value() == "-") {
-                        bufNum.insert( 0, 1,'-');
+                        bufNum.insert(0, 1, '-');
                         result.popBack();
                     }
                     result.pushBack(Token(Token::Type::Number, bufNum));
@@ -34,7 +40,8 @@ MyVector ShuntingYard::tokenize(const char* expression) {
                 break;
             case ('+'):
             case ('-'):
-                if (i == 0) {
+                if (i == 0 || result[result.size() - 1].type() == Token::Type::LeftParen &&
+                    bufNum.find('-') == std::string::npos && bufNum.empty()) {
                     bufNum += "-";
                     continue;
                 }
