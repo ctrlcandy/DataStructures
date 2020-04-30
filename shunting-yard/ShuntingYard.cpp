@@ -38,15 +38,15 @@ MyVector ShuntingYard::tokenize(const char* expression) {
                 bufChar = expression[i];
                 result.pushBack(Token(Token::Type::RightParen, bufChar));
                 break;
-            case ('+'):
-                if (!result.size())
-                    continue;
             case ('-'):
-                if (!result.size() || result[result.size() - 1].type() == Token::Type::LeftParen &&
+                if (i == 0 || expression[i -1] == ' ' || result[result.size() - 1].type() == Token::Type::LeftParen &&
                     bufNum.find('-') == std::string::npos && bufNum.empty()) {
                     bufNum += "-";
                     continue;
                 }
+            case ('+'):
+                if (i == 0 || expression[i -1] == ' ')
+                  continue;
             case ('/'):
             case ('*'):
             case ('^'):
