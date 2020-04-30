@@ -39,8 +39,10 @@ MyVector ShuntingYard::tokenize(const char* expression) {
                 result.pushBack(Token(Token::Type::RightParen, bufChar));
                 break;
             case ('+'):
+                if (!result.size())
+                    continue;
             case ('-'):
-                if (i == 0 || result[result.size() - 1].type() == Token::Type::LeftParen &&
+                if (!result.size() || result[result.size() - 1].type() == Token::Type::LeftParen &&
                     bufNum.find('-') == std::string::npos && bufNum.empty()) {
                     bufNum += "-";
                     continue;
