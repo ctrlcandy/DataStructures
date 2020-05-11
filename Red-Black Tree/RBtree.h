@@ -4,18 +4,20 @@
 
 #include <cstdlib>
 
+template<typename  T>
 class RBtree {
-    template<typename  T>
-    struct Node
+    class Node
     {
-        Node(const std::size_t key, const T value) : key(key), value(value) {};
-        const std::size_t key;
-        T value;
-        Node *left = nullptr, *right = nullptr;
+    public:
+        Node(const std::size_t key, const T value) : key_(key), value_(value) {};
+
+        const std::size_t key_;
+        T value_;
+        Node *left_ = nullptr, *right_ = nullptr;
     };
 
 public:
-    RBtree() = default;
+    RBtree() : _size(0) {};
     RBtree(const RBtree& copyRBtree);
     RBtree(RBtree&& copyRBtree) noexcept;
 
@@ -24,81 +26,92 @@ public:
 
     ~RBtree();
 
-    template<typename  T>
     void addNode(std::size_t key, T value);
 
     void deleteFirstNodeByKey(std::size_t key);
     void deleteAllNodesByKey(std::size_t key);
 
-    template<typename  T>
-    Node<T>& find(std::size_t key);
+    Node& find(std::size_t key);
+    Node& findNodeWithMaxKey();
+    Node& findNodeWithMinKey();
 
-    template<typename  T>
-    Node<T>& findNodeWithMaxKey();
+    [[nodiscard]] std::size_t key() const { return Node::key_; };
+    T value() const { return Node::value_; };
+    Node* left() const { return Node::left_; };
+    Node* right() const { return Node::right_; };
 
-    template<typename  T>
-    Node<T>& findNodeWithMinKey();
-
-    std::size_t  size() const;
+    [[nodiscard]] std::size_t  size() const;
     bool isEmpty();
 
 private:
-    std::size_t  _size;
+    std::size_t  _size = 0;
 };
 
-RBtree::RBtree(const RBtree &copyRBtree) {
+template<typename  T>
+RBtree<T>::RBtree(const RBtree &copyRBtree)
+    : Node::key_(copyRBtree.key()), Node::value_(copyRBtree.value()),
+      Node::right_(copyRBtree.right()), Node::left_(copyRBtree.left()),
+      _size(copyRBtree._size) {}
 
+template<typename  T>
+RBtree<T>::RBtree(RBtree &&copyRBtree) noexcept : RBtree(copyRBtree) {
+    copyRBtree.left() = nullptr;
+    copyRBtree.right() = nullptr;
 }
 
-RBtree::RBtree(RBtree &&copyRBtree) noexcept {
-
+template<typename  T>
+RBtree<T> &RBtree<T>::operator=(const RBtree &otherRBtree) {
+    return;
 }
 
-RBtree &RBtree::operator=(const RBtree &otherRBtree) {
-    return <#initializer#>;
+template<typename  T>
+RBtree<T> &RBtree<T>::operator=(RBtree &&otherRBtree) noexcept {
+    return;
 }
 
-RBtree &RBtree::operator=(RBtree &&otherRBtree) noexcept {
-    return <#initializer#>;
+template<typename  T>
+RBtree<T>::~RBtree() {
+    left() = nullptr;
+    right() = nullptr;
 }
 
-RBtree::~RBtree() {
+template<typename  T>
+void RBtree<T>::addNode(const std::size_t key, const T value) {
 
 }
 
 template<typename  T>
-void RBtree::addNode(const std::size_t key, const T value) {
+void RBtree<T>::deleteFirstNodeByKey(const std::size_t key) {
 
 }
 
-void RBtree::deleteFirstNodeByKey(const std::size_t key) {
-
-}
-
-void RBtree::deleteAllNodesByKey(const std::size_t key) {
+template<typename  T>
+void RBtree<T>::deleteAllNodesByKey(const std::size_t key) {
 
 }
 
 template<typename T>
-RBtree::Node<T> &RBtree::find(std::size_t key) {
+typename RBtree<T>::Node &RBtree<T>::find(std::size_t key) {
 
 }
 
 template<typename T>
-RBtree::Node<T> &RBtree::findNodeWithMaxKey() {
-    return <#initializer#>;
+typename RBtree<T>::Node &RBtree<T>::findNodeWithMaxKey() {
+    return ;
 }
 
 template<typename T>
-RBtree::Node<T> &RBtree::findNodeWithMinKey() {
-    return <#initializer#>;
+typename RBtree<T>::Node &RBtree<T>::findNodeWithMinKey() {
+    return ;
 }
 
-std::size_t RBtree::size() const {
+template<typename  T>
+std::size_t RBtree<T>::size() const {
     return 0;
 }
 
-bool RBtree::isEmpty() {
+template<typename  T>
+bool RBtree<T>::isEmpty() {
     return false;
 }
 
