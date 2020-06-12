@@ -15,13 +15,10 @@ class RBtree {
 
 public:
     RBtree();
-
     RBtree(const RBtree &copyRBtree);
-
     RBtree(RBtree &&copyRBtree) noexcept;
 
     RBtree &operator=(const RBtree &otherRBtree);
-
     RBtree &operator=(RBtree &&otherRBtree) noexcept;
 
     ~RBtree();
@@ -29,42 +26,39 @@ public:
     void add(std::size_t key, T value);
 
     void deleteFirstNodeByKey(std::size_t key);
-
     void deleteAllNodesByKey(std::size_t key);
 
     Node &find(std::size_t key);
-
     Node &findNodeWithMaxKey();
-
     Node &findNodeWithMinKey();
 
     [[nodiscard]] std::size_t size() const;
 
     Node *node();
-
     const Node *node() const;
-
     bool isEmpty();
 
 private:
+    Node* _find(std::size_t key, Node* ptr);
+
     std::size_t _size;
-    Node *_node;
+    Node *_root;
 };
 
 template<typename T>
-RBtree<T>::RBtree() : _size(0), _node(nullptr) {}
+RBtree<T>::RBtree() : _size(0), _root(nullptr) {}
 
 template<typename T>
 RBtree<T>::RBtree(const RBtree &copyRBtree) :
-        _node(new Node(copyRBtree._node)),
+        _root(new Node(copyRBtree._root)),
         _size(copyRBtree._size) {}
 
 template<typename T>
 RBtree<T>::RBtree(RBtree &&copyRBtree) noexcept {
-    _node = copyRBtree._node;
+    _root = copyRBtree._root;
     _size = copyRBtree._size;
 
-    copyRBtree._node = nullptr;
+    copyRBtree._root = nullptr;
 }
 
 template<typename T>
@@ -73,7 +67,7 @@ RBtree<T> &RBtree<T>::operator=(const RBtree &otherRBtree) {
         return *this;
     }
 
-    _node = new Node(otherRBtree._node);
+    _root = new Node(otherRBtree._root);
     _size = otherRBtree._size;
 
     return *this;
@@ -85,83 +79,94 @@ RBtree<T> &RBtree<T>::operator=(RBtree &&otherRBtree) noexcept {
         return *this;
     }
 
-    _node = otherRBtree._node;
+    _root = otherRBtree._root;
     _size = otherRBtree._size;
 
-    otherRBtree._node = nullptr;
+    otherRBtree._root = nullptr;
 
     return *this;
 }
 
 template<typename T>
 RBtree<T>::~RBtree() {
-    delete _node;
-    _node = nullptr;
+    delete _root;
+    _root = nullptr;
 };
 
 template<typename T>
 typename RBtree<T>::Node &RBtree<T>::find(std::size_t key) {
-    if (_node == nullptr) {
+    if (_root == nullptr) {
         throw std::invalid_argument("RBtree is empty");
-    } else if (_node->key == key) {
-        return *_node;
-    } else if (_node->key < key) {
-        find(_node->left->key);
-    } else if (_node->key < key) {
-        find(_node->right->key);
-    } else throw std::invalid_argument("Key not found");
+    } else {
+        return *_find(key, _root);
+    }
+}
+
+template<typename T>
+typename RBtree<T>::Node *RBtree<T>::_find(std::size_t key, Node *ptr) {
+    if (ptr == nullptr) {
+        throw std::invalid_argument("Key not found");
+    } else if (ptr->key == key) {
+        return ptr;
+    } else if (ptr->key > key) {
+        return _find(key, ptr->left);
+    } else {
+        return _find(key, ptr->right);
+    }
 }
 
 template<typename T>
 typename RBtree<T>::Node &RBtree<T>::findNodeWithMaxKey() {
-    if (_node == nullptr) {
+    if (_root == nullptr) {
         throw std::invalid_argument("RBtree is empty");
     }
 
-    Node *bufNode = _node->left;
-    while (bufNode->left != nullptr) {
-        bufNode = bufNode->left;
+    Node *bufNode = _root;
+    while (bufNode->right != nullptr) {
+        bufNode = bufNode->right;
     }
-    return bufNode;
+
+    return *bufNode;
 }
 
 template<typename T>
 typename RBtree<T>::Node &RBtree<T>::findNodeWithMinKey() {
-    if (_node == nullptr) {
+    if (_root == nullptr) {
         throw std::invalid_argument("RBtree is empty");
     }
 
-    Node *bufNode = _node->right;
-    while (bufNode->right != nullptr) {
-        bufNode = bufNode->right;
+    Node *bufNode = _root;
+    while (bufNode->left != nullptr) {
+        bufNode = bufNode->left;
     }
-    return bufNode;
+    return *bufNode;
 }
 
 template<typename T>
 void RBtree<T>::add(const std::size_t key, const T value) {
     if (_size == 0) {
-        _node = new Node(key, value);
+        _root = new Node(key, value);
     } else {
-        Node *bufNode(_node);
-        while (true) {
+        Node* bufNode = _root;
+        while(true) {
             if (key < bufNode->key) {
                 if (bufNode->left == nullptr) {
                     bufNode->left = new Node(key, value);
                     break;
                 } else {
                     bufNode = bufNode->left;
+                    continue;
                 }
             } else {
                 if (bufNode->right == nullptr) {
-                    bufNode->right = new Node(key, value); // TODO: проверка на утечку памяти
+                    bufNode->right = new Node(key, value);
                     break;
                 } else {
                     bufNode = bufNode->right;
+                    continue;
                 }
             }
         }
-        _node = bufNode;
     }
     _size++;
 }
@@ -169,7 +174,7 @@ void RBtree<T>::add(const std::size_t key, const T value) {
 template<typename T>
 void RBtree<T>::deleteFirstNodeByKey(const std::size_t key) {
     Node *bufNode = find(key);
-    delete bufNode;
+    //delete bufNode;
     // TODO: проверка корректности
 }
 
@@ -194,12 +199,12 @@ std::size_t RBtree<T>::size() const {
 
 template<typename T>
 typename RBtree<T>::Node *RBtree<T>::node() {
-    return _node;
+    return _root;
 }
 
 template<typename T>
 const typename RBtree<T>::Node *RBtree<T>::node() const {
-    return _node;
+    return _root;
 }
 
 template<typename T>
