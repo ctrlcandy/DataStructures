@@ -2,8 +2,6 @@
 #define RBTREE_H
 
 
-#include <cstdlib>
-
 template<typename T>
 class RBtree {
     class Node {
@@ -17,10 +15,13 @@ class RBtree {
 
 public:
     RBtree();
+
     RBtree(const RBtree &copyRBtree);
+
     RBtree(RBtree &&copyRBtree) noexcept;
 
     RBtree &operator=(const RBtree &otherRBtree);
+
     RBtree &operator=(RBtree &&otherRBtree) noexcept;
 
     ~RBtree();
@@ -28,15 +29,19 @@ public:
     void add(std::size_t key, T value);
 
     void deleteFirstNodeByKey(std::size_t key);
+
     void deleteAllNodesByKey(std::size_t key);
 
     Node &find(std::size_t key);
+
     Node &findNodeWithMaxKey();
+
     Node &findNodeWithMinKey();
 
     [[nodiscard]] std::size_t size() const;
 
     Node *node();
+
     const Node *node() const;
 
     bool isEmpty();
@@ -51,15 +56,15 @@ RBtree<T>::RBtree() : _size(0), _node(nullptr) {}
 
 template<typename T>
 RBtree<T>::RBtree(const RBtree &copyRBtree) :
-        _node(copyRBtree._node),
+        _node(new Node(copyRBtree._node)),
         _size(copyRBtree._size) {}
 
 template<typename T>
-RBtree<T>::RBtree(RBtree &&copyRBtree) noexcept : RBtree(copyRBtree) {
-    if (_node != nullptr) {
-        copyRBtree._node->left = nullptr;
-        copyRBtree._node->right = nullptr;
-    }
+RBtree<T>::RBtree(RBtree &&copyRBtree) noexcept {
+    _node = copyRBtree._node;
+    _size = copyRBtree._size;
+
+    copyRBtree._node = nullptr;
 }
 
 template<typename T>
@@ -68,7 +73,7 @@ RBtree<T> &RBtree<T>::operator=(const RBtree &otherRBtree) {
         return *this;
     }
 
-    _node = otherRBtree._node;
+    _node = new Node(otherRBtree._node);
     _size = otherRBtree._size;
 
     return *this;
@@ -98,17 +103,13 @@ template<typename T>
 typename RBtree<T>::Node &RBtree<T>::find(std::size_t key) {
     if (_node == nullptr) {
         throw std::invalid_argument("RBtree is empty");
-    }
-    else if (_node->key == key) {
+    } else if (_node->key == key) {
         return *_node;
-    }
-    else if (_node->key < key) {
+    } else if (_node->key < key) {
         find(_node->left->key);
-    }
-    else if (_node->key < key) {
+    } else if (_node->key < key) {
         find(_node->right->key);
-    }
-    else throw std::invalid_argument("Key not found");
+    } else throw std::invalid_argument("Key not found");
 }
 
 template<typename T>
